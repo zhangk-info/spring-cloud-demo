@@ -1,0 +1,119 @@
+server:
+  port: 91
+
+spring:
+  application:
+    name: account-server
+  profiles:
+    active: dev
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+    jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      default-property-inclusion: always #non_null#non_empty
+      time-zone: GMT+8
+    servlet:
+      multipart:
+        max-file-size: 100MB
+        max-request-size: 300MB
+
+  datasource:
+    test-while-idle: true
+    time-between-eviction-runs-millis: 3600000
+    validation-query: SELECT 1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: DatebookHikariCP
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 600000
+      connection-test-query: SELECT 1
+      max-lifetime: 1800000
+      connection-timeout: 30000
+    url: jdbc:mysql://139.155.72.177:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: seata
+    password: seata..123
+
+  #使用nacos作为服务注册与发现中心和配置中心
+  #从配置中心加载配置文件，bootstrap.yml加载在application.yml之前
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 139.155.72.177:8848
+        #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #服务注册到的namespace
+        #group: zhangk #服务注册到的group
+        username: "nacos"
+        password: "zhangk..123"
+      config:
+        server-addr: 139.155.72.177:8848 #配置中心地址
+        file-extension: yml #指定yaml格式的配置
+        group: zhangk #配置文件所在的group
+        #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #配置文件所在的namespace
+        username: "nacos"
+        password: "zhangk..123"
+
+#seata必须项
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_test_tx_group
+  service:
+    vgroupMapping:
+      my_test_tx_group: default
+  config:
+    type: nacos
+    nacos:
+      server-addr: 139.155.72.177:8848
+      group: "SEATA_GROUP"
+      namespace:
+      username: "nacos"
+      password: "zhangk..123"
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 139.155.72.177:8848
+      group: "SEATA_GROUP"
+      namespace:
+      username: "nacos"
+      password: "zhangk..123"
+
+mybatis-plus:
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+url:
+  #全局都要放开的路径，不过认证,如：获取token,swagger-ui,静态资源
+  public-ignores:
+    - /*/oauth/token
+    - /oauth/token
+    - /swagger-resources/**
+    - /webjars/**
+    - /swagger-ui.html/**
+    - /doc.html
+  #指定放开的路径，不过认证，如：用户注册，验证码获取，短信验证码获取，自定义路径
+  ignores:
+    - /*/api/v1/sms/ver-code
+    - /api/v1/sms/ver-code
+    - /*/captchas
+    - /*/captchas.jpg
+    - /captchas
+    - /captchas.jpg
+    - /v2/**

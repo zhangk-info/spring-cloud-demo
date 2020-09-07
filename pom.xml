@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zk</groupId>
+    <artifactId>spring-cloud-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>cloud-alibaba-commons</module>
+        <module>cloud-gateway-gateway</module>
+        <module>account-server</module>
+        <module>storage-server</module>
+        <module>order-server</module>
+        <module>auth-server</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <!--继承父为spring-boot-starter-parent 类似于引用spring-boot-dependencies-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.1.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <!-- 统一配置管理 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <mybatis.version>5.1.47</mybatis.version>
+        <durid.version>1.1.16</durid.version>
+        <mybatis.spring.boot.version>1.3.2</mybatis.spring.boot.version>
+        <junit.version>4.12</junit.version>
+        <lombok.version>1.18.10</lombok.version>
+        <log4j.version>1.2.17</log4j.version>
+        <mysql.version>8.0.18</mysql.version>
+        <mybatis.plus.version>3.1.2</mybatis.plus.version>
+        <fastjson.version>1.2.49</fastjson.version>
+        <seata-spring-boot-starter.version>1.3.0</seata-spring-boot-starter.version>
+        <!--
+            2020/07/16
+            Release Train Version: Hoxton.SR5
+            Supported Boot Version: 2.2.4.RELEASE
+        -->
+        <!--<spring.boot.version>2.3.1.RELEASE</spring.boot.version>-->
+        <spring.cloud.version>Hoxton.SR6</spring.cloud.version>
+        <spring.cloud.alibaba.version>2.2.1.RELEASE</spring.cloud.alibaba.version>
+    </properties>
+
+    <!-- 子模块继承 沿用的jar包配置 作用：子模块 版本锁定 只是声明定义，并不实际引用-->
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring boot 2.2.4 dependencies 最好用上面的继承父为spring-boot-starter-parent-->
+            <!--<dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>-->
+
+            <!-- spring cloud H dependencies -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- spring cloud alibaba 2.2.1 dependencies -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--其他的锁定版本 -->
+            <!--<dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.spring.boot.version}</version>
+            </dependency>-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${durid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty</artifactId>
+                <version>0.9.8.RELEASE</version>
+            </dependency>
+
+            <!-- 重要 踩坑
+                cloud-alibaba-commons里面就算是设置的版本，但是到了引用cloud-alibaba-commons的module又会变回去
+                cloud-alibaba-commons里面是这样的 单独引用了seata-spring-boot-starter1.3.0
+                但是到了auth-server 还是1.1.0 导致配置出错SEATA连不上TC
+                <dependency>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                    <version>2.2.1.RELEASE</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>io.seata</groupId>
+                            <artifactId>seata-spring-boot-starter</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>io.seata</groupId>
+                    <artifactId>seata-spring-boot-starter</artifactId>
+                    <version>1.3.0</version>
+                </dependency>
+             -->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata-spring-boot-starter.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

@@ -1,0 +1,39 @@
+server:
+  port: 9527
+spring:
+  application:
+    name: cloud-gateway
+  main:
+    allow-bean-definition-overriding: true
+
+  cloud:
+    gateway:
+      routes:
+        - id: account_routh #路由的ID，没有固定规则但要求唯一，建议配合服务名
+          uri: lb://account-server/   #匹配后提供服务的路由地址 可以使用ip端口 服务注册后也可使用lb://serverName/
+          predicates:
+            - Path=/account/**   #断言,路径相匹配的进行路由
+          filters:
+            - StripPrefix=1 #重要！ 去掉前缀，否则需要servlet.context-path=断言的path
+
+        - id: order_routh
+          uri: lb://order-server/
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=1
+
+        - id: storage_routh
+          uri: lb://storage-server/
+          predicates:
+            - Path=/storage/**
+          filters:
+            - StripPrefix=1
+
+        - id: auth-server
+          uri: lb://auth-server/
+          order: -1
+          predicates:
+            - Path=/oauth/**
+          filters:
+            - StripPrefix=1

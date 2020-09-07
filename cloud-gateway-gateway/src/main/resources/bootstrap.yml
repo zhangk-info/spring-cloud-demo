@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: cloud-gateway
+  profiles:
+    active: dev
+
+  main:
+    allow-bean-definition-overriding: true
+
+  #使用nacos作为服务注册与发现中心和配置中心
+  #从配置中心加载配置文件，bootstrap.yml加载在application.yml之前
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 139.155.72.177:8848
+        #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #服务注册到的namespace
+        #group: zhangk #服务注册到的group
+        username: "nacos"
+        password: "zhangk..123"
+        namespace: public #必须 路由类配置需要
+      config:
+        server-addr: 139.155.72.177:8848 #配置中心地址
+        file-extension: yml #指定yaml格式的配置
+        group: zhangk #配置文件所在的group
+        #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #配置文件所在的namespace
+        username: "nacos"
+        password: "zhangk..123"
+
+
+nacos:
+  gateway:
+    route:
+      config:
+        data-id: cloud-gateway-dev.yml #nacos 配置管理中 监听查询的 data-id
+        group: DEFAULT_GROUP
+
+#使用eurake作为服务注册与发现中心，使用spring-cloud-config作为配置中心
+#  #从配置中心加载配置文件，bootstrap.yml加载在application.yml之前
+#  cloud:
+#    config:
+#      label: master
+#      name: ${spring.application.name}
+#      profile: ${spring.profiles.active}
+#      username: zhangk
+#      password: zhangk@123
+##      uri: http://192.168.2.173:3344
+#      #使用服务发现中的配置服务
+#      discovery:
+#        enabled: true  # 表示使用服务发现的configserver配置，而不是自己配置的Config Server的uri，默认false
+#        service-id: cloud-config-center  # 指定Config Server在服务发现中的serviceId，默认是configserver
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://com.zk:com.zk..123@localhost:30001/eureka,http://com.zk:com.zk..123@192.168.2.173:30002/eureka
+#  instance:
+#    instance-id: cloud-gateway-service #主机名称修改
+#    prefer-ip-address: true #显示主机ip
+#    hostname: cloud-gateway-service
+
+
+#暴露actuator监控端点实现动态配置刷新 个人以为没有什么意义
+#需要在使用配置“${}”的Controller上写入注解“@RefreshScope”和发送http://server/actuator/refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
