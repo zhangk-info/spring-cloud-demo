@@ -7,6 +7,8 @@ spring:
   profiles:
     active: dev
 
+  main:
+    allow-bean-definition-overriding: true #重要！允许当前项目的bean覆盖已经生成了的bean,如JwtAccessTokenConverter
   mvc:
     throw-exception-if-no-handler-found: true
   jackson:
@@ -54,6 +56,7 @@ spring:
         #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #配置文件所在的namespace
         username: "nacos"
         password: "zhangk..123"
+        refresh-enabled: false #去除动态配置 节省网络和cpu
 
 #seata必须项
 seata:
@@ -95,7 +98,11 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+  mapper-locations: classpath:/mapper/*/*Mapper.xml
 
+logging:
+  level:
+    org.springframework: DEBUG
 
 url:
   #全局都要放开的路径，不过认证,如：获取token,swagger-ui,静态资源

@@ -1,4 +1,4 @@
-package com.zk.commons.filter.context;
+package com.zk.configuration.auth;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -6,10 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @Slf4j
-public class SignatureVerifierConfig {
+public class OauthConfiguration {
 
     @Bean
     public SignatureVerifier signerVerifier() {
@@ -32,4 +34,18 @@ public class SignatureVerifierConfig {
         }
     }
 
+    @Bean
+    public JwtTokenStore tokenStore() {
+        return new JwtTokenStore(jwtTokenEnhancer());
+    }
+
+    //
+    @Bean
+    protected JwtAccessTokenConverter jwtTokenEnhancer() {
+        //用作 JWT 转换器
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        String publicKey = ResourceUtil.readUtf8Str("publicKey.txt");
+        converter.setVerifierKey(publicKey); //设置公钥
+        return converter;
+    }
 }

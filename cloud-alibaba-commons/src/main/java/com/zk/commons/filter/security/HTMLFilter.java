@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
  * @author Cal Hendersen
  * @author Michael Semb Wever
  */
-@Component
 public final class HTMLFilter {
 
     /**

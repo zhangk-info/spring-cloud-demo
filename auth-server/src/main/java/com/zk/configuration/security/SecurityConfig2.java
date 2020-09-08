@@ -1,9 +1,9 @@
 package com.zk.configuration.security;
 
 import com.zk.commons.password.SM4PasswordEncoder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,16 +14,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(99)/* @Order on WebSecurityConfigurers must be unique. Order of 100 was already used on com.zk.configuration.security.SecurityConfig2*/
+public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;

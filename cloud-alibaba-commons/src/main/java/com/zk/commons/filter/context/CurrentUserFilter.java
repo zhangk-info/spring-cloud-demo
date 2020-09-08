@@ -3,13 +3,14 @@ package com.zk.commons.filter.context;
 import com.alibaba.fastjson.JSON;
 import com.zk.commons.context.CurrentUser;
 import com.zk.commons.context.UserContext;
+import com.zk.commons.exception.ErrorCode;
+import com.zk.commons.exception.ServiceException;
 import com.zk.commons.properties.URIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,6 +42,9 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 if (null == authToken) {
                     authToken = request.getParameter("t");
                 }
+                if (null == authToken) {
+                    throw new ServiceException(ErrorCode.NO_API_ACCESS_POWER);
+                }
                 Jwt jwt = JwtHelper.decodeAndVerify(StringUtils.substringAfter(authToken, "Bearer ").trim(), signerVerifier);
                 CurrentUser currentUser = JSON.parseObject(jwt.getClaims(), CurrentUser.class);
                 UserContext.set(currentUser);
@@ -49,6 +53,7 @@ public class CurrentUserFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.error("current user filter error. url is [{}]", request.getRequestURI(), e);
                 response.setStatus(401);
+                response.setCharacterEncoding("utf-8");
                 response.getWriter().print(e.getMessage());
             }
         }

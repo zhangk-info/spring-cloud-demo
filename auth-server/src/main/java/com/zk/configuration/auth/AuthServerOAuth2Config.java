@@ -1,10 +1,10 @@
 package com.zk.configuration.auth;
 
-import cn.hutool.core.io.resource.ResourceUtil;
 import com.zk.configuration.auth.exception.LoginWebResponseExceptionTranslator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -53,15 +54,15 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 //        不可用 ： windows : keytool -list -rfc --keystore mytest.jks
 //        linux : openssl x509 -inform pem -pubkey
 
-//        //.jks文件方式 setKeyPair 然后从文件中通过password和alias得到KeyPair
-//        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("private.key"), "zhangk..123".toCharArray());
-//        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("zhangk"));
 
         //privateKey方式 setSigningKey
         try {
-            String privateKey = ResourceUtil.readUtf8Str("privateKey.txt");
-            converter.setSigningKey(privateKey);
-            //这里踩坑，SigningKey 和 VerifierKey 不能在同一个项目中同时被设置
+            //.jks文件方式 setKeyPair 然后从文件中通过password和alias得到KeyPair
+            KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
+            converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest", "mypass".toCharArray()));
+            //踩坑 下面这个方式token会变短，然后客户端验证不通过，可能是哪里有问题,最好别用！！
+//            String privateKey = ResourceUtil.readUtf8Str("privateKey.txt");
+//            converter.setSigningKey(privateKey);
 //            String publicKey = ResourceUtil.readUtf8Str("publicKey.txt");
 //            converter.setVerifierKey(publicKey);
         } catch (Exception e) {

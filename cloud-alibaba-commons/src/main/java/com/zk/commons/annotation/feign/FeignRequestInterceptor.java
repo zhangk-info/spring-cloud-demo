@@ -1,12 +1,12 @@
 package com.zk.commons.annotation.feign;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.Request;
+import feign.Request.Body;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -16,28 +16,24 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
-@Slf4j
 public class FeignRequestInterceptor implements RequestInterceptor {
-    /**
-     * 微服务之间传递的唯一标识
-     */
+    private static final Logger log = LoggerFactory.getLogger(FeignRequestInterceptor.class);
     private static final String X_REQUEST_ID = "X-RPC-Request-Id";
-
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Override
+    public FeignRequestInterceptor() {
+    }
+
     public void apply(RequestTemplate template) {
-        log.info("RequestTemplate -- transferHeader -- before: {}.", JSON.toJSONString(template));
-        transferHeader(template);
-        log.info("RequestTemplate -- transferHeader -- after: {}.", JSON.toJSONString(template));
-        Request.Body body = template.requestBody();
+        this.transferHeader(template);
+        Body body = template.requestBody();
         String bodyString = body.asString();
         log.info("request params is : {}.", bodyString);
-        if (null != body && Objects.equals("GET", template.method()) && isJsonString(bodyString)) {
-            transferBody(template, bodyString);
+        if (null != body && Objects.equals("GET", template.method()) && this.isJsonString(bodyString)) {
+            this.transferBody(template, bodyString);
         }
-        log.info("RequestTemplate -- transferBody -- after: {}.", JSON.toJSONString(template));
+
     }
 
     private boolean isJsonString(String bodyString) {
@@ -46,96 +42,94 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
     private void transferBody(RequestTemplate template, String bodyString) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(bodyString);
-            template.body(Request.Body.empty());
-            Map<String, Collection<String>> queries = new HashMap<>();
-            buildQuery(jsonNode, "", queries);
+            JsonNode jsonNode = this.objectMapper.readTree(bodyString);
+            template.body(Body.empty());
+            Map<String, Collection<String>> queries = new HashMap();
+            this.buildQuery(jsonNode, "", queries);
             template.queries(queries);
-        } catch (IOException e) {
-            log.error("feign call transfer body error.", e);
+        } catch (IOException var5) {
+            log.error("feign call transfer body error.", var5);
         }
+
     }
 
     private void buildQuery(JsonNode jsonNode, String path, Map<String, Collection<String>> queries) {
-        if (!jsonNode.isContainerNode()) { // 叶子节点
-            if (jsonNode.isNull()) {
-                return;
-            }
-            Collection<String> values = queries.get(path);
-            if (null == values) {
-                values = new ArrayList<>();
-                queries.put(path, values);
-            }
-            values.add(jsonNode.asText());
-            return;
-        }
-        if (jsonNode.isArray()) { // 数组节点
-            Iterator<JsonNode> it = jsonNode.elements();
-            while (it.hasNext()) {
-                buildQuery(it.next(), path, queries);
+        if (!jsonNode.isContainerNode()) {
+            if (!jsonNode.isNull()) {
+                Collection<String> values = (Collection) queries.get(path);
+                if (null == values) {
+                    values = new ArrayList();
+                    queries.put(path, values);
+                }
+
+                ((Collection) values).add(jsonNode.asText());
             }
         } else {
-            Iterator<Map.Entry<String, JsonNode>> it = jsonNode.fields();
-            while (it.hasNext()) {
-                Map.Entry<String, JsonNode> entry = it.next();
-                if (StringUtils.hasText(path)) {
-                    buildQuery(entry.getValue(), path + "." + entry.getKey(), queries);
-                } else { // 根节点
-                    buildQuery(entry.getValue(), entry.getKey(), queries);
+            Iterator it;
+            if (jsonNode.isArray()) {
+                it = jsonNode.elements();
+
+                while (it.hasNext()) {
+                    this.buildQuery((JsonNode) it.next(), path, queries);
+                }
+            } else {
+                it = jsonNode.fields();
+
+                while (it.hasNext()) {
+                    Map.Entry<String, JsonNode> entry = (Map.Entry) it.next();
+                    if (StringUtils.hasText(path)) {
+                        this.buildQuery((JsonNode) entry.getValue(), path + "." + (String) entry.getKey(), queries);
+                    } else {
+                        this.buildQuery((JsonNode) entry.getValue(), (String) entry.getKey(), queries);
+                    }
                 }
             }
+
         }
     }
 
     private void transferHeader(RequestTemplate template) {
-        HttpServletRequest httpServletRequest = getHttpServletRequest();
-
-        try {
-            log.error("httpServletRequest -- " + httpServletRequest);
-            Map<String, String> headers = getHeaders(httpServletRequest);
-            log.error("headers -- " + JSON.toJSONString(headers));
-        } catch (Exception e) {
-
-        }
-
+        HttpServletRequest httpServletRequest = this.getHttpServletRequest();
         if (httpServletRequest != null) {
-            Map<String, String> headers = getHeaders(httpServletRequest);
-            // 传递所有请求头,防止部分丢失
-            Iterator<Map.Entry<String, String>> iterator = headers.entrySet().iterator();
+            Map<String, String> headers = this.getHeaders(httpServletRequest);
+            Iterator iterator = headers.entrySet().iterator();
+
             while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
-                //去掉一个头
-                if (!entry.getKey().equals("transfer-encoding")) {
-                    template.header(entry.getKey(), entry.getValue());
+                Map.Entry<String, String> entry = (Map.Entry) iterator.next();
+                if (!Objects.equals("transfer-encoding", entry.getKey())) {
+                    template.header((String) entry.getKey(), new String[]{(String) entry.getValue()});
                 }
             }
-            // 微服务之间传递的唯一标识
-            if (!headers.containsKey(X_REQUEST_ID)) {
+
+            if (!headers.containsKey("X-RPC-Request-Id")) {
                 String sid = String.valueOf(UUID.randomUUID());
-                template.header(X_REQUEST_ID, sid);
+                template.header("X-RPC-Request-Id", new String[]{sid});
             }
-            log.debug("FeignRequestInterceptor -- RequestTemplate:{}", JSON.toJSONString(template));
+
+            log.error("FeignRequestInterceptor:{}", template.toString());
         }
+
     }
 
     private HttpServletRequest getHttpServletRequest() {
         try {
             return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        } catch (Exception e) {
+        } catch (Exception var2) {
             return null;
         }
     }
 
     private Map<String, String> getHeaders(HttpServletRequest request) {
-        Map<String, String> map = new LinkedHashMap<>();
+        Map<String, String> map = new LinkedHashMap();
         Enumeration<String> enumeration = request.getHeaderNames();
         if (enumeration != null) {
             while (enumeration.hasMoreElements()) {
-                String key = enumeration.nextElement();
+                String key = (String) enumeration.nextElement();
                 String value = request.getHeader(key);
                 map.put(key, value);
             }
         }
+
         return map;
     }
 }
