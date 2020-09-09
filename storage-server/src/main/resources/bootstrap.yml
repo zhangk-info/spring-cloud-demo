@@ -49,6 +49,7 @@ spring:
         #group: zhangk #服务注册到的group
         username: "nacos"
         password: "zhangk..123"
+        heart-beat-interval: 60 #增大心跳间隔，节省网络和cpu
       config:
         server-addr: 139.155.72.177:8848 #配置中心地址
         file-extension: yml #指定yaml格式的配置

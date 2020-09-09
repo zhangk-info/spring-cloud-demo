@@ -3,7 +3,7 @@ package com.zk.configuration.auth;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zk.auth.user.entity.User;
 import com.zk.auth.user.mapper.UserMapper;
-import com.zk.configuration.auth.entity.SecurityUserDetails;
+import com.zk.commons.auth.SecurityUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +23,7 @@ public class SecurityUserDetailService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public SecurityUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
 
         wrapper.and(accountQueryWrapper ->

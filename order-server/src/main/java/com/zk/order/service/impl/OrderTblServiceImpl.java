@@ -7,6 +7,8 @@ import com.zk.order.mapper.OrderTblMapper;
 import com.zk.order.service.IOrderTblService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * <p>
  * 服务实现类
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderTblServiceImpl extends ServiceImpl<OrderTblMapper, OrderTbl> implements IOrderTblService {
 
+    @Resource
     private AccountService accountService;
 
     public OrderTbl create(String userId, String commodityCode, int orderCount) {

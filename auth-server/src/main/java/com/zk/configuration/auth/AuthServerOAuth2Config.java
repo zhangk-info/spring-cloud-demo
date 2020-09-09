@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -65,6 +66,8 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 //            converter.setSigningKey(privateKey);
 //            String publicKey = ResourceUtil.readUtf8Str("publicKey.txt");
 //            converter.setVerifierKey(publicKey);
+
+            converter.setAccessTokenConverter(new JwtInfoConvert());
         } catch (Exception e) {
             log.error("read privateKey.txt error,please check resource dir has 'privateKey.txt' file ?!", e);
             throw new RuntimeException("没有找到私钥文件，请检查！！！");

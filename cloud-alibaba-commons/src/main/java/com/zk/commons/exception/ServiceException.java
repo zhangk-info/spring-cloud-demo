@@ -58,10 +58,6 @@ public class ServiceException extends RuntimeException {
         super(message, cause);
     }
 
-    public String getMessage() {
-        return JSON.toJSONString(this);
-    }
-
     public int getCode() {
         return code;
     }

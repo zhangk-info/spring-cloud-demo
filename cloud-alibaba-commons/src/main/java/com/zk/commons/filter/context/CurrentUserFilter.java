@@ -49,13 +49,14 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 CurrentUser currentUser = JSON.parseObject(jwt.getClaims(), CurrentUser.class);
                 UserContext.set(currentUser);
                 log.info("current currentUser is : {}", null != currentUser ? currentUser.toString() : " null");
-                filterChain.doFilter(request, response);
             } catch (Exception e) {
                 log.error("current user filter error. url is [{}]", request.getRequestURI(), e);
                 response.setStatus(401);
                 response.setCharacterEncoding("utf-8");
                 response.getWriter().print(e.getMessage());
             }
+            
+            filterChain.doFilter(request, response);
         }
     }
 

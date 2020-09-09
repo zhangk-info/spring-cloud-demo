@@ -1,5 +1,6 @@
 package com.zk.commons.context;
 
+import com.zk.commons.auth.SecurityUserDetails;
 import com.zk.commons.util.BeanConvertUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
