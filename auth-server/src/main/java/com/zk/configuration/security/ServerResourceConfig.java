@@ -20,7 +20,7 @@ public class ServerResourceConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 //                .antMatchers("/api/v1/sms/**").permitAll() //在.authenticated()之前设置不需要认证的路径，header都不需要
-                .antMatchers("/api/**")
+                .antMatchers("/**")
                 .authenticated().and().authorizeRequests()
                 .antMatchers(HttpMethod.GET, // 允许对于网站静态资源的无授权访问
                         "/",

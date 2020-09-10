@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: auth-server
+    admin:
+      enabled: true
   profiles:
     active: dev
 
@@ -38,7 +40,6 @@ spring:
     url: jdbc:mysql://139.155.72.177:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: seata
     password: seata..123
-
   #使用nacos作为服务注册与发现中心和配置中心
   #从配置中心加载配置文件，bootstrap.yml加载在application.yml之前
   cloud:
@@ -104,6 +105,13 @@ mybatis-plus:
 logging:
   level:
     org.springframework: DEBUG
+
+#暴露actuator监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 url:
   #全局都要放开的路径，不过认证,如：获取token,swagger-ui,静态资源

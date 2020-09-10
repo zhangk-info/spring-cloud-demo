@@ -15,6 +15,7 @@
         <module>order-server</module>
         <module>auth-server</module>
         <module>business-server</module>
+        <module>admin-sesrver</module>
     </modules>
     <packaging>pom</packaging>
 

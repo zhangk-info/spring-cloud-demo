@@ -24,5 +24,5 @@ public class CurrentUser {
 
     //自定义属性
     private String nickName;
-    private String userType;
+    private Integer userType;
 }

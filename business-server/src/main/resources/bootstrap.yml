@@ -106,6 +106,13 @@ logging:
   level:
     org.springframework: DEBUG
 
+#暴露actuator监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 url:
   #全局都要放开的路径，不过认证,如：获取token,swagger-ui,静态资源
   public-ignores:

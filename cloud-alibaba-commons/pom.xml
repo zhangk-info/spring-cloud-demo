@@ -156,6 +156,7 @@
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.45</version>
         </dependency>
+        <!-- todo 使用hutool的smutil -->
         <dependency>
             <groupId>com.sgitg</groupId>
             <artifactId>sgcc-sm</artifactId>

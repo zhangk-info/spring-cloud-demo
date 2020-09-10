@@ -20,8 +20,8 @@ import javax.annotation.Resource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(99)/* @Order on WebSecurityConfigurers must be unique. Order of 100 was already used on com.zk.configuration.security.SecurityConfig2*/
-public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
+//@Order(99)/* @Order on WebSecurityConfigurers must be unique. Order of 100 was already used on com.zk.configuration.security.SecurityConfig2*/
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
