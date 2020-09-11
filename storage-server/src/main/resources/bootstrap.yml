@@ -50,6 +50,7 @@ spring:
         username: "nacos"
         password: "zhangk..123"
         heart-beat-interval: 60 #增大心跳间隔，节省网络和cpu
+        watch-delay: 60000
       config:
         server-addr: 139.155.72.177:8848 #配置中心地址
         file-extension: yml #指定yaml格式的配置
@@ -58,6 +59,38 @@ spring:
         username: "nacos"
         password: "zhangk..123"
         refresh-enabled: false #去除动态配置 节省网络和cpu
+
+    stream:
+      binders: # 在此处配置要绑定的rabbitmq的服务信息；
+        testChannel: # 表示定义的名称，用于于binding整合
+          type: rabbit # 消息组件类型
+          environment: # 设置rabbitmq的相关的环境配置
+            spring:
+              rabbitmq:
+                host: 139.155.72.177
+                port: 5672
+                username: rabbit
+                password: zhangk..123
+                virtual-host: my_vhost
+          group: testA
+      bindings: # 服务的整合处理
+        channelA: # 这个名字是一个通道的名称 output的send 和 input的receive都是用这个通道
+          destination: testExchange # 表示要使用的Exchange名称定义
+          content-type: application/json # 设置消息类型，本次为json，文本则设置“text/plain”
+          binder: testChannel  # 设置要绑定的消息服务的具体设置
+          group: testA
+
+  #这里也必须配置 否则有一个健康检查会使用localhost:5672导致报错
+  rabbitmq:
+    addresses: amqp://139.155.72.177:5672
+    username: rabbit
+    password: zhangk..123
+    virtual-host: my_vhost
+
+  redis:
+    host: 139.155.72.177
+    port: 6379
+    password:
 
 #seata必须项
 seata:
