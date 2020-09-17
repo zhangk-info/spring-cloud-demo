@@ -138,12 +138,25 @@ logging:
   level:
     org.springframework: DEBUG
 
-#暴露actuator监控端点
+#暴露actuator监控端点和prometheus配置
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
 
 url:
   #全局都要放开的路径，不过认证,如：获取token,swagger-ui,静态资源

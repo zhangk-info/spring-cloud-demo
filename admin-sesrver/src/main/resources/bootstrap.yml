@@ -77,14 +77,24 @@ nacos:
 #    hostname: cloud-gateway-service
 
 
-#暴露actuator监控端点
+#暴露actuator监控端点和prometheus配置
 management:
+  security:
+    enabled: false
   endpoints:
     web:
       exposure:
         include: "*"
-  security:
-    enabled: false
   endpoint:
     health:
-      show-details: ALWAYS
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}

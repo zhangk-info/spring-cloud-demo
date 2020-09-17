@@ -60,10 +60,22 @@ nacos:
 #    hostname: cloud-gateway-service
 
 
-#暴露actuator监控端点实现动态配置刷新 个人以为没有什么意义
-#需要在使用配置“${}”的Controller上写入注解“@RefreshScope”和发送http://server/actuator/refresh
+#暴露actuator监控端点和prometheus配置
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
