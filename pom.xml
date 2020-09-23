@@ -16,6 +16,7 @@
         <module>auth-server</module>
         <module>business-server</module>
         <module>admin-sesrver</module>
+        <module>juc-server</module>
     </modules>
     <packaging>pom</packaging>
 
