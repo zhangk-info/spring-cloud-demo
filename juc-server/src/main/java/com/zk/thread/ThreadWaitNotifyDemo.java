@@ -13,6 +13,11 @@ import com.zk.source.Cake;
  * 知识点：
  * wait();notify(); 是Object类的
  * 使用wait(); 必须配置使用while使用 点击wait();进入可看到注释
+ *
+ * 精确通知顺序访问
+ * 生成了蛋糕，只想唤醒消费者线程，精确唤醒
+ *
+ *
  */
 public class ThreadWaitNotifyDemo {
 
