@@ -1,0 +1,27 @@
+stages:
+  - check
+  - dependency
+  - build
+  - deploy
+
+check:
+  stage: check
+  script:
+    - ls
+
+dependency:
+  stage: dependency
+  script:
+    - /data/maven/bin/mvn clean dependency:tree
+
+build:
+  stage: build
+  script:
+    - /data/maven/bin/mvn clean compile jib:build
+  only:
+    - master
+    
+deploy:
+  stage: deploy
+  script:
+    - ls
