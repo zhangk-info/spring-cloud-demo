@@ -1,4 +1,4 @@
-package com.zk.commons.util.tika;
+package com.zk.utils.tika;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;

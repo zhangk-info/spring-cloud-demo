@@ -1,12 +1,8 @@
-package com.zk.commons.util.elasticsearch;
+package com.zk.utils.elasticsearch;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.bjnsc.ssis.dcc.project.dto.DcProjectBaseDTO;
-import com.bjnsc.ssis.dcc.project.entity.DcProjectBase;
-import com.bjnsc.ssis.pms.client.DepartService;
-import com.bjnsc.ssis.pms.dto.TypeDepartTreeDTO;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -25,29 +21,25 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ElasticSearchService {
 
     @Resource
     private RestHighLevelClient client;
-    @Resource
-    private DepartService departService;
 
     /**
      * 测试存储数据到es
      * 更新也是可以的
      */
-    public void indexData(DcProjectBaseDTO projectBase) throws IOException {
+    public void indexData(Object o, Long id) throws IOException {
         // 准备数据
-        String type = projectBase.getAttachName().substring(projectBase.getAttachName().lastIndexOf(".") + 1, projectBase.getAttachName().length());
+        String type = "";
         IndexRequest indexRequest = new IndexRequest("dcc", type);//索引名
-        indexRequest.id(projectBase.getId().toString());//数据id
+        indexRequest.id(id.toString());//数据id
 
-        String jsonString = JSON.toJSONString(projectBase);
+        String jsonString = JSON.toJSONString(o);
         indexRequest.source(jsonString, XContentType.JSON); //要保存的内容
 
         // 执行操作
@@ -62,19 +54,19 @@ public class ElasticSearchService {
      *
      * @throws IOException
      */
-    public DcProjectBaseDTO getOne(DcProjectBase projectBase) throws IOException {
+    public Object getOne(Long id) throws IOException {
         try {
-            String type = projectBase.getAttachName().substring(projectBase.getAttachName().lastIndexOf(".") + 1, projectBase.getAttachName().length());
+            String type = "";
             // 1、创建检索请求
-            GetRequest getSourceRequest = new GetRequest("dcc", type, projectBase.getId().toString());
+            GetRequest getSourceRequest = new GetRequest("dcc", type, id.toString());
 
             // 2、执行检索
             GetResponse searchResponse = client.get(getSourceRequest);
 
             if (searchResponse != null && searchResponse.getSource() != null) {
                 String str = JSON.toJSONString(searchResponse.getSource());
-                DcProjectBaseDTO dcProjectBaseDTO = JSON.parseObject(str, DcProjectBaseDTO.class);
-                return dcProjectBaseDTO;
+                Object o = JSON.parseObject(str, Object.class);
+                return o;
             }
             return null;
         } catch (Exception e) {
@@ -88,7 +80,7 @@ public class ElasticSearchService {
      *
      * @throws IOException
      */
-    public IPage<DcProjectBaseDTO> searchData(Integer page, Integer pageSize, String queryStr, Long projectId,Boolean uhv) throws IOException {
+    public IPage<Object> searchData(Integer page, Integer pageSize, String queryStr, Long projectId) throws IOException {
         IPage pages = new Page(page, pageSize);
         // 1、创建检索请求
         SearchRequest searchRequest = new SearchRequest();
@@ -110,14 +102,8 @@ public class ElasticSearchService {
         boolQueryBuilder.must(QueryBuilders.matchQuery("projectId", projectId));
         boolQueryBuilder.filter(QueryBuilders.matchQuery("text", queryStr));
         //这里还要处理只能查我能看到的部门的数据
-        List<TypeDepartTreeDTO> typeTree = departService.listMineDepart(projectId, false, true,uhv);
         List<String> departIds = new ArrayList<>();
-        typeTree.forEach(t -> {
-            t.getChildren().forEach(o -> {
-                Map<String, Object> map = (HashMap) o;
-                departIds.add(map.get("id").toString());
-            });
-        });
+        departIds.add("1");
 
         //这里还要处理只能查我能看到的部门的数据 should 表示or
         departIds.forEach(t -> {
@@ -140,7 +126,7 @@ public class ElasticSearchService {
         //3.1）、获取所有查到的数据
         SearchHits hits = searchResponse.getHits(); // 获取到最外围的 hits
         SearchHit[] searchHits = hits.getHits(); // 内围的 hits 数组
-        List<DcProjectBaseDTO> list = new ArrayList<>();
+        List<Object> list = new ArrayList<Object>();
         for (SearchHit hit : searchHits) {
             /**
              * "_index":"bank",
@@ -151,10 +137,10 @@ public class ElasticSearchService {
              */
             //            hit.getIndex();hit.getType()''
             String str = hit.getSourceAsString();
-            DcProjectBaseDTO dcProjectBaseDTO = JSON.parseObject(str, DcProjectBaseDTO.class);
+            Object o = JSON.parseObject(str, Object.class);
 
-            System.out.println(dcProjectBaseDTO.toString());
-            list.add(dcProjectBaseDTO);
+            System.out.println(o.toString());
+            list.add(o);
 
         }
         pages.setTotal(hits.getTotalHits());

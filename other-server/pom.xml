@@ -49,6 +49,32 @@
             <version>1.24</version>
         </dependency>
 
+        <!-- poi的方式生成pdf 最后选用这个 要稳定一些不会有字重叠在一起和乱换行的情况 -->
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.poi.xwpf.converter.pdf</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
+        <!-- itext的方式生成pdf -->
+        <!--<dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.poi.xwpf.converter.pdf.itext5</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-pdfa</artifactId>
+            <version>5.5.7</version>
+            <scope>provided</scope>
+        </dependency>-->
+
     </dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package com.zk.commons.util.utils;
+package com.zk.utils.pdf;
 
 import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
@@ -13,16 +13,15 @@ public class WordToPDF {
 
     @Test
     public void TestChineseCharacters()
-            throws XWPFConverterException, IOException
-    {
+            throws XWPFConverterException, IOException {
 
-        OutputStream out = new FileOutputStream( new File( "C:\\Users\\Administrator\\Desktop\\test.pdf" ) );//testitext.pdf
+        OutputStream out = new FileOutputStream(new File("C:\\Users\\Administrator\\Desktop\\test.pdf"));//testitext.pdf
 
         XWPFDocument document =
                 new XWPFDocument(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\1.0.1.docx")));
 
         PdfOptions options = PdfOptions.create();
 
-        PdfConverter.getInstance().convert( document, out, options );
+        PdfConverter.getInstance().convert(document, out, options);
     }
 }
