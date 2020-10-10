@@ -1,6 +1,6 @@
-package com.zk.thread;
+package com.zk.demo.thread;
 
-import com.zk.source.Cake;
+import com.zk.demo.source.Cake;
 
 /**
  * 例子：

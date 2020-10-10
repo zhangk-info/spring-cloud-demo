@@ -16,10 +16,10 @@
 
 
 ## java多线程实现的4中方式
-* extends Thread
+* extends Thread / new Thread
 * implements Runnable
-* implements Callable<T>
-* Executors工具类 线程池
+* implements Callable<T> 通过FutureTask包装器来创建
+* Executors工具类 线程池 TreadPoolExecutor类
 
 #### 例子
 * SaleTicket 竞争模式
