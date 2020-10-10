@@ -27,14 +27,15 @@ public class ThreadPoolDemo {
 		int maximumPoolSize = Runtime.getRuntime().availableProcessors() + 1;//7
 		int queueSize = Runtime.getRuntime().availableProcessors() + 1 - 2;
 		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 10L, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(queueSize), Executors.defaultThreadFactory(), new ThreadPoolExecutor.DiscardOldestPolicy());
+				new LinkedBlockingQueue<Runnable>(queueSize), Executors.defaultThreadFactory(), new ThreadPoolExecutor.DiscardPolicy());
 
 		//13个顾客请求
 		try {
-			// 最大 7+5 12个线程提交 超过拒绝
-			//new ThreadPoolExecutor.AbortPolicy() 超过(maximumPoolSize + queueSize)报错拒绝
-			//new ThreadPoolExecutor.CallerRunsPolicy() 超过(maximumPoolSize + queueSize + 1)返回给主线程调用，谁调我我退谁
-			//new ThreadPoolExecutor.DiscardOldestPolicy() 超过(maximumPoolSize + queueSize + 1)放弃调用
+			// 最大 7+5 12个线程提交 默认AbortPolicy超过拒绝并报错
+			//new ThreadPoolExecutor.AbortPolicy() 超过(maximumPoolSize + queueSize)放弃调用，报错
+			//new ThreadPoolExecutor.CallerRunsPolicy() 超过(maximumPoolSize + queueSize)返回给主线程调用，谁调我我退谁
+			//new ThreadPoolExecutor.DiscardOldestPolicy() 超过(maximumPoolSize + queueSize)放弃队列中等待最久的任务，加入当前到队列
+			//new ThreadPoolExecutor.DiscardPolicy() 超过(maximumPoolSize + queueSize)放弃调用，也不报错
 			for (int i = 1; i <= 13; i++) {
 				int finalI = i;
 				threadPoolExecutor.execute(() -> {
