@@ -17,6 +17,7 @@
         <module>business-server</module>
         <module>admin-sesrver</module>
         <module>juc-server</module>
+        <module>jvm-server</module>
         <module>other-server</module>
     </modules>
     <packaging>pom</packaging>

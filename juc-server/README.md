@@ -35,25 +35,29 @@
 多线程辅助类： countDownLatch cyclicBarrier semaphore
 线程池：ThreadPoolExecutor Runtime.getRuntime().availableProcessors() LinkedBlockQueue
 线程池的7个属性： corePoolSize maximumPoolSize keepAliveTime BlockQueue threadFactory rejectedExecutionHandler
-线程池拒绝策略（RejectedExecutionHandler）: Abort/CallerRuns/DiscardOld/Discard
+线程池拒绝策略（RejectedExecutionHandler/Policy）: Abort/CallerRuns/DiscardOld/Discard
+四大函数式接口： Consumer<T> t->{} Supplier<T> t->{return t} Function<T,R> t->{return R} Predicate<T> t->{return true}
 
 线程状态：
 实现线程的4中方式：
 锁：
-锁通信：
+锁通信： 
 多线程辅助类： 
 线程池：
 线程池的7个属性： 
 线程池拒绝策略（）: 
 
 
-线程状态：new runnable blocked waiting timed_waiting terminated
-实现线程的4中方式：Thread Runnable Callable(FutureTask) ThreadPoolExecutor.execute
-锁：synchronized ReentrantLock ReadWriteLock
-锁通信：wait notify condition await signal
+
+线程状态： new runnable blocked waiting timed_waiting terminated
+实现线程的4中方式： extend Thread implements Runnable implements Callable(FutureTask) ThreadPoolExecutor.execute
+锁： synchronized ReentrantLock ReadWriteLock
+锁通信： wait notify condition await signal
 多线程辅助类： countDownLatch cyclicBarrier semaphore
-线程池：ThreadPoolExecutor Runtime.getRuntime().availableProcessors() LinkedBlockQueue
-线程池的7个属性： corePoolSize maximumPoolSize keepAliveTime BlockQueue threadFactory RejectedExecutionHandler
+线程池：ThreadPoolExecutor Runtime.getRuntime().availableProcessors(); LinkedBlockQueue
+线程池的7个属性： corePoolSize maximumPoolSize keepAliveTime blockQueue threadFactory RejectedExecutionHandler
 线程池拒绝策略（RejectedExecutionHandler/Policy）: Abort/CallerRuns/DiscardOld/Discard
 
 
+
+ 
