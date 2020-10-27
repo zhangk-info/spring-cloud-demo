@@ -21,7 +21,7 @@ public class ThreadPoolDemo {
 		// 2 maximumPoolSize 最大线程数 //cpu密集型：设置最大线程数为电脑内核数 +1 //io密集型：电脑内核数/阻塞系数
 		// 3、4 keepAliveTime 空闲线程存活时间
 		// 5 BlockingQueue<Runnable> 任务队列，等待中的任务（提交了尚未执行的）
-		// 6 ThreadFactory 线程工厂
+		// 6 ThreadFactory 线程工厂 //重写线程工厂 目的是调优的时候需要使用线程名字
 		// 7 RejectedExecutionHandler 拒绝策略
 		int corePoolSize = 2;
 		int maximumPoolSize = Runtime.getRuntime().availableProcessors() + 1;//7
