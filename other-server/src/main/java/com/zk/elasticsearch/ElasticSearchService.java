@@ -1,4 +1,4 @@
-package com.zk.utils.elasticsearch;
+package com.zk.elasticsearch;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
