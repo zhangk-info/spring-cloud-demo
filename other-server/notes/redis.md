@@ -26,6 +26,28 @@
 ### lua脚本
 
 
+### redis不是强一致性的数据库
+    主节点挂了的时候，如果数据没有同步到备节点，是会出现数据丢失的情况
+* 脑裂
+* 分区
+
+### redis三种集群模式
+https://www.cnblogs.com/wanghaokun/p/10366689.html
+#### redis 分片集群
+    工作原理如下
+
+    客户端与Redis节点直连,不需要中间Proxy层，直接连接任意一个Master节点
+    根据公式HASH_SLOT=CRC16(key) mod 16384，计算出映射到哪个分片上，然后Redis会去相应的节点进行操作
+    具有如下优点:
+    (1)无需Sentinel哨兵监控，如果Master挂了，Redis Cluster内部自动将Slave切换Master
+    (2)可以进行水平扩容
+    (3)支持自动化迁移，当出现某个Slave宕机了，那么就只有Master了，这时候的高可用性就无法很好的保证了，万一master也宕机了，咋办呢？ 针对这种情况，如果说其他Master有多余的Slave ，集群自动把多余的Slave迁移到没有Slave的Master 中。
+
+    缺点:
+    (1)批量操作是个坑
+    (2)资源隔离性较差，容易出现相互影响的情况。
+
+
 ##### 用Bitmaps做日活统计
 ```
 /**
