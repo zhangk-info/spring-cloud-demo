@@ -5,8 +5,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 
- * @Description: TODO(这里用一句话描述这个类的作用)  
+ * 信号量
+ * @Description:
  * 
  * 在信号量上我们定义两种操作：
  * acquire（获取） 当一个线程调用acquire操作时，它要么通过成功获取信号量（信号量减1），

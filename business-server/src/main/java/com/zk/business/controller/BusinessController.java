@@ -27,6 +27,11 @@ public class BusinessController {
 	}
 
     /*
+    	ACID
+    	原子性（atomicity) [ætəˈmɪsəti]
+    	一致性（consistency) [kənˈsɪstənsi]
+    	隔离性（isolation） [aɪsəˈleɪʃn]
+    	持久性（durability） [dərəˈbɪlɪti]
 
         REQUIRED, 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。
         REQUIRES_NEW, 新建事务，如果当前存在事务，把当前事务挂起。
@@ -43,6 +48,7 @@ public class BusinessController {
         NEVER, 必须在没有中使用；有就报错。
         MANDATORY; 必须在有中使用；没有报错。
 
+		隔离性：
 
         Read uncommitted(读未提交)
         Read committed(读提交)

@@ -18,6 +18,12 @@
             <artifactId>cloud-alibaba-commons</artifactId>
             <version>1.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <!-- for Spring Data Redis v.2.3.x -->
+            <artifactId>redisson-spring-data-23</artifactId>
+            <version>3.13.6</version>
+        </dependency>
 
     </dependencies>
 </project>

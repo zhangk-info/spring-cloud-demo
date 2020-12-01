@@ -3,7 +3,7 @@ package com.zk.juc;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * 
+ * 闭锁
  * @Description:
  *  *让一些线程阻塞直到另一些线程完成一系列操作后才被唤醒。
  * 
