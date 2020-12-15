@@ -14,7 +14,7 @@
 * order-server 订单服务 
 * storage-server 仓储服务 
 * juc-server juc/jvm学习
-* https://github.com/redisson/redisson 接下来学习redisson分布式锁
+* https://github.com/redisson/redisson redisson分布式锁
 
 
 #### 测试环境有部分配置或者功能被注释，请检查todo 
