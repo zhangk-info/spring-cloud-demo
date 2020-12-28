@@ -19,6 +19,7 @@
         <module>juc-server</module>
         <module>jvm-server</module>
         <module>other-server</module>
+        <module>es-server</module>
     </modules>
     <packaging>pom</packaging>
 

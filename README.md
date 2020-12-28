@@ -7,14 +7,15 @@
 * cloud-alibaba-commons 公共组件基础包 
 * cloud-gateway-gateway 网关服务 
 * auth-server 认证服务 
-* zk-commons 服务使用的公共配置包
+* com.zk-commons 服务使用的公共配置包
 * admin-server spring-boot-admin-starter-server服务监控 没什么用因为有更好的
 #### 以下为服务 
 * account-server 账户服务 
 * order-server 订单服务 
 * storage-server 仓储服务 
 * juc-server juc/jvm学习
-* https://github.com/redisson/redisson 接下来学习redisson分布式锁
+* es-server elasticsearch
+* https://github.com/redisson/redisson redisson分布式锁
 
 
 #### 测试环境有部分配置或者功能被注释，请检查todo 

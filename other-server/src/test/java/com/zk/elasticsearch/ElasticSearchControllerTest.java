@@ -12,7 +12,7 @@ import java.util.Map;
 @ContextConfiguration(classes = UtilApplication.class)
 public class ElasticSearchControllerTest extends ControllerTest {
 
-    private final String URI = "api/v1/";
+    private final String URI = "/api/v1/";
 
     @Test
     public void save() throws Exception {

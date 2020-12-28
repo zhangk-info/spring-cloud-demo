@@ -1,7 +1,7 @@
 package com.zk.configuration.redis;
 
-import io.seata.common.exception.DataAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -17,9 +17,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
+/**
+ * 自定义的RedisService 封装调用
+ */
 @Configuration
-@ConditionalOnProperty(prefix = "spring", name = "redis")
+@ConditionalOnBean(RedisTemplate.class)
 public class RedisService {
 
 	@Autowired(required = false)
@@ -590,7 +592,7 @@ public class RedisService {
 		try {
 			return redisTemplate.execute(new RedisCallback<Long>() {
 				@Override
-				public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+				public Long doInRedis(RedisConnection redisConnection){
 					return redisConnection.bitCount(key.getBytes());
 				}
 			});
@@ -643,7 +645,7 @@ public class RedisService {
 		try {
 			return redisTemplate.execute(new RedisCallback<Long>() {
 				@Override
-				public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+				public Long doInRedis(RedisConnection redisConnection) {
 					//参数转换
 					byte bytes[][] = new byte[][]{};
 					bytes = keys.stream().map(t -> t.getBytes()).collect(Collectors.toList()).toArray(new byte[0][0]);
