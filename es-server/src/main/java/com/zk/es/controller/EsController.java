@@ -67,4 +67,15 @@ public class EsController {
         return documentService.getLastCleanDataByDataIdAndCategory(dataId, category);
     }
 
+    /**
+     * 通过@query的方式查询
+     * @param dataId
+     * @param category
+     * @return
+     */
+    @GetMapping("es/last-clean2")
+    Documents getLastCleanDataByDataIdAndCategory2(String dataId, String category) {
+        return documentService.getLastCleanDataByDataIdAndCategory2(dataId, category);
+    }
+
 }

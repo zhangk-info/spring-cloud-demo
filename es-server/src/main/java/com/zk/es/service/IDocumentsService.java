@@ -18,5 +18,7 @@ public interface IDocumentsService {
 
     Documents getLastCleanDataByDataIdAndCategory(String dataId, String category);
 
+    Documents getLastCleanDataByDataIdAndCategory2(String dataId, String category);
+
     Page<Documents> findAllByFileData_IdAndStatus(String fileDataId, String status, String page, String size);
 }

@@ -61,5 +61,17 @@ public class ElasticSearchControllerTest extends ControllerTest {
         this.execute(RequestTypeEnum.GET, URI + "es/last-clean", map);
     }
 
+    /**
+     * 测试 QueryBuilder
+     * @throws Exception
+     */
+    @Test
+    public void getLastCleanDataByDataIdAndCategory2() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("category", "category");
+        map.put("dataId", "dataId");
+        this.execute(RequestTypeEnum.GET, URI + "es/last-clean2", map);
+    }
+
 
 }
