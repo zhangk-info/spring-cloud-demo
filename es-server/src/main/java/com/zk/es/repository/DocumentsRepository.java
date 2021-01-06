@@ -50,8 +50,10 @@ public interface DocumentsRepository extends ElasticsearchRepository<Documents, 
             "           {\"bool\":" +
             "               {\"must\":" +
             "                   [ " +
-            "                       {\"term\":{\"data_id\":\"dataId\"} }" + // 和jpa不同 下标是从0开始的 这里还有问题 传入值是dataId找不到，直接写dataId就能找到
-            "                       ,{\"term\":{\"category\":\"category\"} }" +
+//            "                       {\"term\":{\"data_id\":\"dataId\"} }" + // must中放两个term得不到想要的结果，我对term的理解不够？ todo 为什么
+//            "                       ,{\"term\":{\"category\":\"category\"} }" +
+            "                       { \"query_string\" : { \"query\" : \"?0\", \"fields\" : [ \"data_id\" ] } }" +// 和jpa不同 下标是从0开始的 这里还有问题 传入值是dataId找不到，直接写dataId就能找到
+            "                       ,{ \"query_string\" : { \"query\" : \"?1\", \"fields\" : [ \"category\" ] } }" +
             "                   ] " +
             "               }" +
             "           }" +
@@ -66,7 +68,12 @@ public interface DocumentsRepository extends ElasticsearchRepository<Documents, 
     Documents getLastCleanDataByDataIdAndCategory( String dataId, String category);
 
     @Transactional
-    @Query(value = "{\"bool\":{\"must\":[{\"term\":{\"status\": \"WAITTING\"} },{\"term\":{\"file_data_id\": ?1} } ]}} " +
+    @Query(value = "{\"bool\":" +
+            "{\"must\":[" +
+//            "{\"term\":{\"status\": \"WAITTING\"} },{\"term\":{\"file_data_id\": ?1} } " +
+            "                       { \"query_string\" : { \"query\" : \"WAITTING\", \"fields\" : [ \"status\" ] } }" +
+            "                       ,{ \"query_string\" : { \"query\" : \"?0\", \"fields\" : [ \"file_data_id\" ] } }" +// 和jpa不同 下标是从0开始的 这里还有问题 传入值是dataId找不到，直接写dataId就能找到
+            "]}} " +
             "       ,\"from\":\"0\"" +
             "       ,\"to\":\"1\"")
     Long findOnByFailedOfServer(Long fileDataId);

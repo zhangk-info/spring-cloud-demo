@@ -176,6 +176,18 @@ tie_breaker的值介于0~1之间, Elasticsearch将 bool检索的分数 * tie_bre
 为了增加精准度, 常用的是配合boost、minimum_should_match等参数控制检索结果.
 ```
 * query_string
+```
+{
+    "query": {
+        "bool" : {
+            "must" : [
+                { "query_string" : { "query" : "?", "fields" : [ "name" ] } },
+                { "query_string" : { "query" : "?", "fields" : [ "price" ] } }
+            ]
+        }
+    }
+}
+```
 
 
 ### query 检索的类型 中级篇 复合查询
@@ -186,7 +198,7 @@ tie_breaker的值介于0~1之间, Elasticsearch将 bool检索的分数 * tie_bre
 ```
 * bool ： 过滤查询/联合查询 must, should, must_not
 ```
- * must: 文档必须完全匹配条件；多个全部满足；
+ * must: 文档必须完全匹配条件；多个全部满足； must中放两个term会得不到想要的结果
  * should: should下面会带一个以上的条件，至少满足一个条件，这个文档就符合should；多个任一满足；
  * must_not: 文档必须不匹配条件；多个全部不满足；
  {
