@@ -50,3 +50,20 @@ spring:
   elasticsearch:
     rest:
       uris: http://192.168.200.30:9200
+
+  jpa:
+    show-sql: true
+
+
+# LOGGING
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        data:
+          elasticsearch: debug
+  file:
+    path: logs
+    max-history: 90
+    max-size: 1GB

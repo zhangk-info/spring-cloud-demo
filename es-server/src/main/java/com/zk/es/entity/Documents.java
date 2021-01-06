@@ -1,13 +1,17 @@
 package com.zk.es.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -28,20 +32,25 @@ public class Documents {
      * 内部使用的逻辑主键。
      */
     @Id
-    private Long id;
+    // 这里的id是否可以用自定义的分布式id 不行 id属性必须是类型String。
+    private String id;
 
     /**
      * 创建时间
      */
-    @Field(name = "created_date_time")
-    @CreatedDate
+    @CreatedDate // 这个没用
+    @Field(name = "created_date_time", type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDateTime;
 
     /**
      * 更新时间
      */
-    @Field(name = "update_date_time")
-    @LastModifiedDate
+    @LastModifiedDate // 这个没用
+    @Field(name = "update_date_time", type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDateTime;
 
     /**
@@ -78,7 +87,7 @@ public class Documents {
      * 排序号
      */
     @Field(name = "order_number")
-    private long orderNumber;
+    private Long orderNumber;
 
     /**
      * 同步表记录的“处理状态”。

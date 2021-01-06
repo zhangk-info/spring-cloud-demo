@@ -1,11 +1,11 @@
 package com.zk.es.repository;
 
 import com.zk.es.entity.Documents;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,42 +19,56 @@ import java.util.Optional;
  * @author
  * @since 2020-09-08
  */
-public interface DocumentsRepository extends ElasticsearchRepository<Documents, Long> {
+public interface DocumentsRepository extends ElasticsearchRepository<Documents, String> {
 
     // 支持自定义方法
     // 具体使用和更多的使用方法参照：https://docs.spring.io/spring-data/elasticsearch/docs/3.1.3.RELEASE/api/
-    public List<Documents> findByCategory(String category);
+//    public List<Documents> findByCategory(String category);
 
-    Page<Documents> findAllByFileData_IdAndStatus(Long fileDataId, String status, Pageable pageable);
+    Page<Documents> findAllByFileDataIdAndStatus(Long fileDataId, String status, Pageable pageable);
 
-    List<Documents> findAllByFileData_IdAndStatus(Long fileDataId, String status);
+    List<Documents> findAllByFileDataIdAndStatus(Long fileDataId, String status);
 
-    List<Documents> findAllByFileData_Id(Long fileDataId);
+    List<Documents> findAllByFileDataId(Long fileDataId);
 
-    @Transactional
-    @Query(value = "delete from t_file_data_records where file_data_id = :fileDataId")
-    void deleteAllByFileData_Id(@Param("fileDataId") Long fileDataId);
-
-    long countAllByStatusAndFileData_Id(String status, Long fileDataId);
-
-    long countAllByFileData_Id(Long fileDataId);
+//    long countAllByStatusAndFileDataId(String status, Long fileDataId);
+//
+//    long countAllByFileData_Id(Long fileDataId);
 
     Optional<Documents> findDocumentsById(String id);
 
-    @Query(value = "select d.id from t_file_data_records d where d.status = 'WAITTING' and d.file_data_id = :fileDataId limit 1")
-    @Transactional
-    Long findOnByFailedOfServer(@Param("fileDataId") Long fileDataId);
+    //    @Query(value = "select d.id from t_file_data_records d where d.status = 'WAITTING' and d.file_data_id = :fileDataId limit 1")
 
     /**
-     * 当dataId不在表中存在的时候会全量扫描查询出来的数据集导致查询很慢，所以过滤了只找7天的
-     * todo 如果10天都没有这个类型的文件下发 这里就成了一个bug
-     *
      * @param dataId
      * @param category
      * @return
      */
-    @Query(value = "select * from t_file_data_records d where d.data_id = :dataId and category = :category  and to_days(now())-to_days(d.created_date_time) <=10 order by created_date_time desc limit 1")
+//    @Query(value = "select * from t_file_data_records d where d.data_id = :dataId and category = :category order by created_date_time desc limit 1")
     @Transactional
-    Documents getLastCleanDataByDataIdAndCategory(@Param("dataId") String dataId, @Param("category") String category);
+    @Query(value = "" +
+            "           {\"bool\":" +
+            "               {\"must\":" +
+            "                   [ " +
+            "                       {\"term\":{\"data_id\":\"dataId\"} }" + // 和jpa不同 下标是从0开始的 这里还有问题 传入值是dataId找不到，直接写dataId就能找到
+            "                       ,{\"term\":{\"category\":\"category\"} }" +
+            "                   ] " +
+            "               }" +
+            "           }" +
+            // 已测试 声明式查询仅仅只是设置查询时候query:属性的值 所以不能进行排序，聚合，分页等操作
+//            "       ,\"from\":\"0\"" +
+//            "       ,\"to\":\"1\"" +
+//            "       ,\"sort\": [" +
+//            "           {\"created_date_time\":{\"order\":\"desc\"}}" +
+//            "       ]" +
+            "   ")
+//    @Query(value = "{\"match_all\":{}}")
+    Documents getLastCleanDataByDataIdAndCategory( String dataId, String category);
+
+    @Transactional
+    @Query(value = "{\"bool\":{\"must\":[{\"term\":{\"status\": \"WAITTING\"} },{\"term\":{\"file_data_id\": ?1} } ]}} " +
+            "       ,\"from\":\"0\"" +
+            "       ,\"to\":\"1\"")
+    Long findOnByFailedOfServer(Long fileDataId);
 
 }
