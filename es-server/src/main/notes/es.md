@@ -48,6 +48,7 @@ createIndex 是否创建索引，默认:true
 
 
 ### @Field
+踩坑 字段类型对于es来说很重要 不能随便变更 比如从字符串到时间，从float到double，都是不能再有数据之后再转换的，此时必须使用 elasticsearch-dump数据转换（读取重插入）
 这个主键对应的ElasticsearchCase#setMappings()方法
 ```
 type 字段类型 默认根据java类型推断,可选类型：Text,Integer,Long,Date,Float,Double,Boolean,Object,Auto,Nested,Ip,Attachment,Keyword,新的数据类型请参考官网
@@ -62,7 +63,8 @@ store 是否单独存储，应该是存储在_source
 analyzer 分词模式
 ignoreFields 
 includeInParent 
-fielddata 
+fielddata  默认为false，当对文本字段进行排序，聚合操作时会抛出异常。改成true解决
+    * Text fields are not optimised for operations that require per-document field data like aggregations and sorting, so these operations are disabled by default. Please use a keyword field instead. Alternatively, set fielddata=true on [***] in order to load field data by uninverting the inverted index. Note that this can use significant memory.
 ```
 
 ```

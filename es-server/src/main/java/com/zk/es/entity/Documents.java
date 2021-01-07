@@ -41,7 +41,7 @@ public class Documents {
     @CreatedDate // 这个没用
     @Field(name = "created_date_time", type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDateTime;
 
     /**
@@ -50,7 +50,7 @@ public class Documents {
     @LastModifiedDate // 这个没用
     @Field(name = "update_date_time", type = FieldType.Date, format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDateTime;
 
     /**
@@ -104,6 +104,6 @@ public class Documents {
     /**
      * 合并失败原因
      */
-    @Field(name = "reason")
+    @Field(name = "reason", index = false, type = FieldType.Text)
     private String reason;
 }
