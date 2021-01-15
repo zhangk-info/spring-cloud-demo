@@ -1,6 +1,7 @@
 package com.zk.configuration.auth;
 
 import com.zk.configuration.auth.exception.LoginWebResponseExceptionTranslator;
+import com.zk.configuration.auth.token_granter.MobileGranter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,14 +12,22 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
+import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
+import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
+import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
@@ -47,14 +56,6 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-//
-//        进入[%JAVA_HOME%]路径下
-//        生成JKS Java KeyStore文件
-//        keytool -genkeypair -alias mytest -keyalg RSA  -keypass mypass -keystore mytest.jks -storepass mypass
-//        导出公钥 由于windows导出不了公钥，所以找了个util ExportCert
-//        不可用 ： windows : keytool -list -rfc --keystore mytest.jks
-//        linux : openssl x509 -inform pem -pubkey
-
 
         //privateKey方式 setSigningKey
         try {
@@ -66,6 +67,12 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 //            converter.setSigningKey(privateKey);
 //            String publicKey = ResourceUtil.readUtf8Str("publicKey.txt");
 //            converter.setVerifierKey(publicKey);
+
+            // 这种才是对的
+//            RSAPrivateKey privateKey = AlgorithmKeyUtils.generateRsaPrivateKey(Base64.getDecoder().decode(ResourceUtil.readUtf8Str("privateKey.txt")));
+//            converter.setSigner(new RsaSigner(privateKey));
+//            RSAPublicKey publicKey = AlgorithmKeyUtils.generateRsaPublicKey(Base64.getDecoder().decode(ResourceUtil.readUtf8Str("publicKey.txt")));
+//            converter.setVerifier(new RsaVerifier(publicKey));
 
             converter.setAccessTokenConverter(new JwtInfoConvert());
         } catch (Exception e) {
@@ -98,6 +105,55 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
                 .userDetailsService(securityUserDetailService)
                 .tokenStore(jwtTokenStore())
                 .accessTokenConverter(accessTokenConverter());
+
+        // 设置TokenGranter 便于使用自定义的 电话短信验证码登录
+        endpoints.tokenGranter(tokenGranter(endpoints));
+    }
+
+    /**
+     * 创建grant_type列表
+     *
+     * @param endpoints
+     * @return
+     */
+    private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
+        List<TokenGranter> list = new ArrayList<>();
+        // 这里配置密码模式
+        if (authenticationManager != null) {
+            list.add(new ResourceOwnerPasswordTokenGranter(authenticationManager,
+                    endpoints.getTokenServices(),
+                    endpoints.getClientDetailsService(),
+                    endpoints.getOAuth2RequestFactory()));
+        }
+        //刷新token模式、
+        list.add(new RefreshTokenGranter
+                (endpoints.getTokenServices(),
+                        endpoints.getClientDetailsService(),
+                        endpoints.getOAuth2RequestFactory()));
+        //授权码模式、
+        list.add(new AuthorizationCodeTokenGranter(
+                endpoints.getTokenServices(),
+                endpoints.getAuthorizationCodeServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory()));
+        //、简化模式
+        list.add(new ImplicitTokenGranter(
+                endpoints.getTokenServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory()));
+
+        //客户端模式
+        list.add(new ClientCredentialsTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory()));
+
+
+        //自定义手机号验证码模式、
+        list.add(new MobileGranter(
+                authenticationManager,
+                endpoints.getTokenServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory()));
+
+        return new CompositeTokenGranter(list);
     }
 
     /**
