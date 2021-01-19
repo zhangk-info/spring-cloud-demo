@@ -52,7 +52,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
      * JwtAccessTokenConverter：对Jwt来进行编码以及解码的类
      * 可以在这里增加附件信息、自定义签名、AccessTokenConverter
      */
-    @Bean
+//    @Bean 不一定要给spring管理 tokenStore给了就行 resources.tokenStore(tokenStore);
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
