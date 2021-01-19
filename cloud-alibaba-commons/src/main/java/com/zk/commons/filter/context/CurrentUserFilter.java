@@ -47,6 +47,7 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 }
                 Jwt jwt = JwtHelper.decodeAndVerify(StringUtils.substringAfter(authToken, "Bearer ").trim(), signerVerifier);
                 CurrentUser currentUser = JSON.parseObject(jwt.getClaims(), CurrentUser.class);
+
                 UserContext.set(currentUser);
                 log.info("current currentUser is : {}", null != currentUser ? currentUser.toString() : " null");
             } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.zk.configuration.security;
 
 import com.zk.commons.password.SM4PasswordEncoder;
+import com.zk.configuration.auth.token_granter.MobileAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,21 +22,38 @@ import javax.annotation.Resource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-//@Order(99)/* @Order on WebSecurityConfigurers must be unique. Order of 100 was already used on com.zk.configuration.security.SecurityConfig2*/
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
+    @Resource
+    private MobileAuthenticationProvider mobileAuthenticationProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/oauth/token").permitAll();
+        http.formLogin().permitAll()
+                /*.loginProcessingUrl("/oauth/token")*/
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .csrf().disable()
+                // “session”管理的设置
+                .sessionManagement()
+                // 不让“jsessionid”出现在URL中，等同于XML配置里的：disable-url-rewriting="true"
+//                .enableSessionUrlRewriting(true)
+                // 基于token，所以不需要session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        ;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
+
+        // 增加自定义的 AuthenticationProvider
+        auth.authenticationProvider(mobileAuthenticationProvider);
     }
 
     @Bean

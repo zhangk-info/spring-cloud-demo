@@ -106,6 +106,8 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
                 .tokenStore(jwtTokenStore())
                 .accessTokenConverter(accessTokenConverter());
 
+        // 配合使用 auth.authenticationProvider(new MobileAuthenticationProvider());
+        // 一个管理 Provider 一个管理 Granter
         // 设置TokenGranter 便于使用自定义的 电话短信验证码登录
         endpoints.tokenGranter(tokenGranter(endpoints));
     }
