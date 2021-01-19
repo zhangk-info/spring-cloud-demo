@@ -22,11 +22,15 @@ public class JwtInfoConvert extends DefaultAccessTokenConverter {
         Object principal = authentication.getPrincipal();
         if (principal instanceof SecurityUserDetails) {
             SecurityUserDetails userDetails = (SecurityUserDetails) principal;
-            response.put("name", userDetails.getNickName());
+            response.put("clientId", userDetails.getClientId());
+            response.put("domain", userDetails.getDomain());
+            // 自定义属性
             response.put("userId", userDetails.getUserId());
-            response.put("domain",userDetails.getDomain());
-            response.put("nickName",userDetails.getNickName());
-            response.put("userType",userDetails.getUserType());
+            response.put("username", userDetails.getUsername());
+            response.put("userType", userDetails.getUserType());
+
+            // 其他认证属性
+            response.put("iss", "http://cn.com.kcgroup");
         }
         return response;
     }

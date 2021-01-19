@@ -20,12 +20,15 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenG
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
+import org.springframework.security.oauth2.provider.token.store.IssuerClaimVerifier;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +62,11 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
         //privateKey方式 setSigningKey
         try {
-            //.jks文件方式 setKeyPair 然后从文件中通过password和alias得到KeyPair
+            // .jks文件方式 setKeyPair 然后从文件中通过password和alias得到KeyPair
             KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
+            // 设置私钥
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest", "mypass".toCharArray()));
-            //踩坑 下面这个方式token会变短，然后客户端验证不通过，可能是哪里有问题,最好别用！！
+            // 踩坑 下面这个方式token会变短，然后客户端验证不通过，可能是哪里有问题,最好别用！！
 //            String privateKey = ResourceUtil.readUtf8Str("privateKey.txt");
 //            converter.setSigningKey(privateKey);
 //            String publicKey = ResourceUtil.readUtf8Str("publicKey.txt");
@@ -74,10 +78,18 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 //            RSAPublicKey publicKey = AlgorithmKeyUtils.generateRsaPublicKey(Base64.getDecoder().decode(ResourceUtil.readUtf8Str("publicKey.txt")));
 //            converter.setVerifier(new RsaVerifier(publicKey));
 
+            // 设置转换到jwt中的自定义属性的converter
             converter.setAccessTokenConverter(new JwtInfoConvert());
         } catch (Exception e) {
             log.error("read privateKey.txt error,please check resource dir has 'privateKey.txt' file ?!", e);
             throw new RuntimeException("没有找到私钥文件，请检查！！！");
+        }
+
+        try {
+            // 设置其他claims验证 这里我们只用 IssuerClaimVerifier 也可以参考该类使用自定义的
+            converter.setJwtClaimsSetVerifier(new IssuerClaimVerifier(new URL("http://cn.com.kcgroup")));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
 
         return converter;
