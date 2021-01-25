@@ -3,6 +3,7 @@ package com.zk.configuration.auth.exception;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.UnsupportedGrantTypeException;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,17 +31,15 @@ public class LoginFailExceptionSerializer extends StdSerializer<LoginFailExcepti
             message = "授权类型错误";
         } else if (realException instanceof InvalidGrantException) {
             gen.writeStringField("code", "401002");
+            message = "未授权的用户";
+        } else if (realException instanceof BadCredentialsException) {
+            gen.writeStringField("code", "401003");
             message = "用户名或者密码错误";
         } else {
-            gen.writeStringField("code", "401003");
+            gen.writeStringField("code", "401004");
             message = realException.getClass().getSimpleName() + "::" + e.getMessage();
         }
 
-//        if (null != realException) {
-//            gen.writeStringField("message", realException.getClass().getSimpleName() + "::" + e.getMessage());
-//        } else {
-//            gen.writeStringField("message", e.getMessage());
-//        }
         gen.writeStringField("message", message);
         gen.writeStringField("path", request.getServletPath());
         gen.writeStringField("timestamp", String.valueOf(new Date().getTime()));

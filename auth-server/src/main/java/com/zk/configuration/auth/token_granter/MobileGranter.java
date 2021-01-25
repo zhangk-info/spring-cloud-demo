@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MobileGranter extends AbstractTokenGranter {
+
     private static final String GRANT_TYPE = "mobile";
 
     private final AuthenticationManager authenticationManager;

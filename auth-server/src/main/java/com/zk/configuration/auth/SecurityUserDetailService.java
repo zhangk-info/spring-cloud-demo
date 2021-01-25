@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zk.auth.user.entity.User;
 import com.zk.auth.user.mapper.UserMapper;
 import com.zk.commons.auth.SecurityUserDetails;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 public class SecurityUserDetailService implements UserDetailsService {
+
     public final static int ACCOUNT_STATUS_DISABLE = 0;//禁用
     public final static int ACCOUNT_STATUS_NORMAL = 1;//正常
     public final static int ACCOUNT_STATUS_LOCKED = 2;//锁定
@@ -34,7 +35,7 @@ public class SecurityUserDetailService implements UserDetailsService {
 
         List<User> accounts = userMapper.selectList(wrapper);
         if (accounts == null || accounts.size() == 0) {
-            throw new UsernameNotFoundException("系统用户 " + username + " 不存在!");
+            throw new OAuth2Exception("系统用户 " + username + " 不存在!");
         }
 
         return buildUserDetails(accounts.get(0));
