@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -41,7 +40,7 @@ public class OauthConfiguration {
     }
 
     //
-    @Bean
+//    @Bean 不一定要给spring管理 tokenStore给了就行 resources.tokenStore(tokenStore);
     protected JwtAccessTokenConverter jwtTokenEnhancer() {
         //用作 JWT 转换器
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

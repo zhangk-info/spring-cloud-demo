@@ -16,6 +16,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -112,6 +113,7 @@ public class ElasticSearchService {
 
 
         searchSourceBuilder.query(boolQueryBuilder);
+        searchSourceBuilder.sort("",SortOrder.ASC);
 
 
         System.out.println("检索条件：" + searchSourceBuilder.toString());

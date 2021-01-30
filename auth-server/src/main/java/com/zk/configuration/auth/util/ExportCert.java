@@ -1,6 +1,7 @@
 package com.zk.configuration.auth.util;
 
-import sun.misc.BASE64Encoder;
+
+import org.springframework.util.Base64Utils;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -19,8 +20,7 @@ public class ExportCert {
     //导出证书 base64格式
     public static void exportCert(KeyStore keyStore, String alias, String exportFile) throws Exception {
         Certificate certificate = keyStore.getCertificate(alias);
-        BASE64Encoder encoder = new BASE64Encoder();
-        String encoded = encoder.encode(certificate.getEncoded());
+        String encoded = Base64Utils.encodeToString(certificate.getEncoded());
         FileWriter fw = new FileWriter(exportFile);
         fw.write("------Begin Certificate----- \r\n ");//非必须
         fw.write(encoded);
@@ -45,8 +45,7 @@ public class ExportCert {
 
     //导出私钥
     public static void exportPrivateKey(PrivateKey privateKey, String exportFile) throws Exception {
-        BASE64Encoder encoder = new BASE64Encoder();
-        String encoded = encoder.encode(privateKey.getEncoded());
+        String encoded = Base64Utils.encodeToString(privateKey.getEncoded());
         FileWriter fileWriter = new FileWriter(exportFile);
         fileWriter.write("-----Begin Private Key-----\r\n");//非必须
         fileWriter.write(encoded);
@@ -56,8 +55,7 @@ public class ExportCert {
 
     //导出公钥
     public static void exportPublicKey(PublicKey publicKey, String exportFile) throws Exception {
-        BASE64Encoder encoder = new BASE64Encoder();
-        String encoded = encoder.encode(publicKey.getEncoded());
+        String encoded = Base64Utils.encodeToString(publicKey.getEncoded());
         FileWriter fileWriter = new FileWriter(exportFile);
         fileWriter.write("-----BEGIN PUBLIC KEY-----\r\n");//非必须
         fileWriter.write(encoded);
