@@ -92,15 +92,16 @@ blockIO : 阻塞io
     然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存，当这一切都完成之后，kernel会给用户进程发送一个signal，告诉它read操作完成了。
 ```
 
-### redis和nginx使用epoll的区别 accept
+### 其它知识
+#### redis和nginx使用epoll的区别 accept
     1. redis是单线程，且线程中需要做很多事，所以轮询获取client连接
     2. nginx只有client产生才需要做事，所以nginx阻塞等待client连接
 
-### redis多线程
+#### redis多线程
 redis6.x之后的IO threads多线程读写分离，减少了O(n), 其实所有的计算和写还是worker线程在处理
 
 
-### ZeroCopy-零拷贝
+#### ZeroCopy-零拷贝
 ```
 以前的问题： （生产者和消费者是两个client）
     1. 读阶段： 
@@ -114,4 +115,12 @@ redis6.x之后的IO threads多线程读写分离，减少了O(n), 其实所有�
         1. 它仅仅将n条数据put到mmap中，而不是进行n次systemcall写入到磁盘,较少了一次systemcall写入
     2. ”不对数据进行任何加工“的时候可以直接调用sendfile的systemcall较少了一次systemcall读取
 
+```
+
+#### java中的RandomAccessFile 
+```
+它有3中开辟空间的方式：
+1. 堆内内存
+2. 堆外内存
+3. 直接到文件的mmap
 ```
