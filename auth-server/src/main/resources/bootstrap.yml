@@ -10,7 +10,7 @@ spring:
     active: dev
 
   main:
-    allow-bean-definition-overriding: true #重要！允许当前项目的bean覆盖已经生成了的bean,如JwtAccessTokenConverter
+    allow-bean-definition-overriding: true #重要！允许当前项目的bean覆盖已经生成了的bean
   mvc:
     throw-exception-if-no-handler-found: true
   jackson:
