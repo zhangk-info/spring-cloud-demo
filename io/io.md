@@ -70,7 +70,7 @@ blockIO : 阻塞io
 
 ### EPOLL
 ```
-实现：
+实现： epoll_create epoll_ctl epoll_wait
     epoll_create在kernel中开辟一个空间返回一个pid
     server启动epoll_ctl放入server的pid并监听accept事件
     client连接epoll_ctl放入client的pid并监听读写事件
