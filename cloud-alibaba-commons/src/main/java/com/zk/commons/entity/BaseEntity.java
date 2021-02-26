@@ -12,7 +12,6 @@ import java.util.Date;
  * 基础实体
  * </p>
  *
- * @author xuyq(pazsolr @ gmail.com)
  * @since 2019-08-14
  */
 @Data

@@ -26,9 +26,7 @@ import java.util.Set;
 
 /**
  * “{@link Jwts}”的单元测试。
- * Created by xinjie.li on 2019/1/4.
  *
- * @author xinjie.li
  * @since 1.0
  */
 class JwtsTests {

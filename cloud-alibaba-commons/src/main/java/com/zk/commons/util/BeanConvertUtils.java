@@ -15,7 +15,6 @@ import java.util.*;
  * <br><b>class:</b> BeanConvertUtil
  * <br><b>date:</b> 2017年11月28日 下午4:55:07
  *
- * @author: xuyq(pazsolr @ gmail.com)
  * @since 1.0
  */
 public class BeanConvertUtils {

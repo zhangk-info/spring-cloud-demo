@@ -7,7 +7,6 @@ import java.util.Map;
  *
  * @class: ICache
  * @date: 2018/2/10
- * @author: xuyq(pazsolr @ gmail.com)
  * @since 1.0
  */
 public interface ICache<K, V> {

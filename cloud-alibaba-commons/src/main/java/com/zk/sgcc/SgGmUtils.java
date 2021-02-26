@@ -4,7 +4,6 @@ import java.math.BigInteger;
 
 /**
  * 国密组件-工具类
- * @author huanghq
  *
  */
 public class SgGmUtils {

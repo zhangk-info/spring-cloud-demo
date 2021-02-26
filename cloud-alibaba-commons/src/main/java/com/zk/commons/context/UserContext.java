@@ -15,7 +15,6 @@ import java.util.Objects;
  * 用户上下文
  * </p>
  *
- * @author xuyq(pazsolr @ gmail.com)
  * @since 2019-08-14
  */
 public final class UserContext {

@@ -6,7 +6,6 @@ package com.zk.commons.util;
  * <br><b>class:</b> TreeUtils
  * <br><b>date:</b> 2017年11月28日 下午7:56:41
  *
- * @author: xuyq(pazsolr @ gmail.com)
  * @since 1.0
  */
 public class SqlUtils {

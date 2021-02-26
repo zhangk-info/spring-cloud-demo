@@ -16,9 +16,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 /**
  * “算法密钥”的工具类，用于生成“非对称加密算法的公钥和私钥”。
- * Created by xinjie.li on 2019/12/18.
  *
- * @author xinjie.li
  * @since 1.0
  */
 public class AlgorithmKeyUtils {

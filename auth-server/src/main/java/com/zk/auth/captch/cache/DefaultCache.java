@@ -10,7 +10,6 @@ import java.util.TimerTask;
  *
  * @class: TimerCache
  * @date: 2018/2/10
- * @author: xuyq(pazsolr @ gmail.com)
  * @since 1.0
  */
 public class DefaultCache<K, V> extends AbstractCacheMap<K, V> {
