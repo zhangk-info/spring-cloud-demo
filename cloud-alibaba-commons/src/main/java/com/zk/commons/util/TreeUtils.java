@@ -10,7 +10,6 @@ import java.util.Map;
 
 /**
  * <b>TODO(这里用一句话描述这个类的作用)</b><br/>
- * <br><b>package:</b> com.yunget.config.util
  * <br><b>class:</b> TreeUtils
  * <br><b>date:</b> 2017年11月28日 下午7:56:41
  *

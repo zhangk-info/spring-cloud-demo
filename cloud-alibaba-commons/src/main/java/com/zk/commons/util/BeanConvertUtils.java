@@ -12,7 +12,6 @@ import java.util.*;
 /**
  * <b>】要拷贝字段的目标对象不可以是抽象类、接口，或者只有有参构造方法，
  * 否则在targetClass.newInstance()时会报java.lang.InstantiationException</b><br/>
- * <br><b>package:</b> com.yunget.config.util
  * <br><b>class:</b> BeanConvertUtil
  * <br><b>date:</b> 2017年11月28日 下午4:55:07
  *

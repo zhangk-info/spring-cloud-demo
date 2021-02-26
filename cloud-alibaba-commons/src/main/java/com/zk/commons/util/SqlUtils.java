@@ -3,7 +3,6 @@ package com.zk.commons.util;
 
 /**
  * <b>驼峰转换等</b><br/>
- * <br><b>package:</b> com.yunget.config.util
  * <br><b>class:</b> TreeUtils
  * <br><b>date:</b> 2017年11月28日 下午7:56:41
  *
