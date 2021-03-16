@@ -9,9 +9,26 @@ import java.util.concurrent.Flow;
 public class Observer {
 
     public static void main(String[] args) throws InterruptedException {
+        // 建立发布者
         Publisher publisher = new Publisher();
+        // 建立订阅者
         Subscriber subscriber = new Subscriber();
+
+        // 订阅者绑定背压
+        Subscription subscription = new Subscription();
+        subscriber.onSubscribe(subscription);
+
+        // 发布者绑定订阅者
         publisher.subscribe(subscriber);
+
+
+        // 发送数据
+        for (int i = 0; i < 100; i++) {
+            publisher.submit(i + "- - ");
+        }
+
+        // 发送完成关闭
+        publisher.close();
 
 
     }
@@ -24,43 +41,45 @@ public class Observer {
  */
 class Publisher implements Flow.Publisher<String> {
 
+    Flow.Subscriber subscriber;
 
     public Publisher() {
     }
 
     @Override
     public void subscribe(Flow.Subscriber<? super String> subscriber) {
-        new Thread(() -> {
-            try {
-                Subscription subscription = new Subscription();
-                subscriber.onSubscribe(subscription);
-                System.out.println("消息发送");
-                subscriber.onNext("1");
-                subscriber.onNext("2");
-                subscriber.onNext("3");
-                subscription.cancel();
-                subscriber.onNext("4");
+        this.subscriber = subscriber;
+    }
 
-                subscriber.onComplete();
-            } catch (Exception e) {
-                subscriber.onError(e);
-            }
-        }).start();
+    public void submit(String s) {
+        // 消息发送不阻塞
+        try {
+            subscriber.onNext(s);
+        } catch (Exception e) {
+            subscriber.onError(e);
+        }
+    }
+
+    public void close() {
+        subscriber.onComplete();
     }
 
 
 }
 
+/**
+ * 回压的核心实现
+ */
 class Subscription implements Flow.Subscription {
 
-    private Boolean cancel = Boolean.FALSE;
+    private volatile Boolean cancel = Boolean.FALSE;
 
     @Override
     public void request(long n) {
         if (cancel) {
-            throw new RuntimeException("取消接收了");
+            throw new RuntimeException("取消接收了" + n);
         }
-        System.out.println(" 接收到第" + n + "条消息 ");
+//        System.out.println(" 接收到第" + n + "条消息 ");
     }
 
     @Override
@@ -89,8 +108,8 @@ class Subscriber implements Flow.Subscriber<String> {
     public void onNext(String item) {
         count++;
         subscription.request(count);
+        System.out.println("接收到消息 - 处理消息 :" + item);
 
-        System.out.println("接收到消息 :" + item);
     }
 
     @Override

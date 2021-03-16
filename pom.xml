@@ -21,6 +21,7 @@
         <module>other-server</module>
         <module>es-server</module>
         <module>design-pattern</module>
+        <module>reactor</module>
     </modules>
     <packaging>pom</packaging>
 
