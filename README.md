@@ -30,8 +30,8 @@
 * graylog 
 * elk
 
+### sa-plus sa-plus的微服务版本, 基于Spring-Cloud-Alibaba
+http://sa-plus.dev33.cn/
+#### sa-plus 微服务版
+https://gitee.com/sz6/sp-cloud
 
-
-### 更新日志
-* 2020/09/11增加spring-cloud-stream测试在order-server和storage-server中 ， 增加redis
-* order-server同时存在消息发送和接收，storage-server存在消息接收（order-server中的接收已注释，如需测试是否消息重复接收请放开）
