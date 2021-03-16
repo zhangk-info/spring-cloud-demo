@@ -1,7 +1,10 @@
 package com.zk.demo;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.*;
 
+@Slf4j
 public class ThreadPoolDemo {
     public static void main(String[] args) {
 
@@ -56,13 +59,13 @@ public class ThreadPoolDemo {
                     try {
                         TimeUnit.MILLISECONDS.sleep(2000L);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage(), e);
                     }
                     System.out.println(Thread.currentThread().getName() + "\t 办理业务成功" + finalI);
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             threadPoolExecutor.shutdown();
         }

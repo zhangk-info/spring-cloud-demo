@@ -87,7 +87,7 @@ public class ControllerTest {
 
             System.out.println(mvcResult.getResponse().getContentAsString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

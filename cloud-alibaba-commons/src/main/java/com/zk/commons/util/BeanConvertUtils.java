@@ -1,6 +1,7 @@
 package com.zk.commons.util;
 
 import cn.hutool.core.convert.ConvertException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -17,6 +18,7 @@ import java.util.*;
  *
  * @since 1.0
  */
+@Slf4j
 public class BeanConvertUtils {
 
     public static <T> T convert(Object source, Class<T> targetClass) {
@@ -123,7 +125,7 @@ public class BeanConvertUtils {
             }
             return t;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return t;
     }

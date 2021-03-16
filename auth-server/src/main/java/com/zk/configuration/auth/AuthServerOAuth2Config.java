@@ -89,7 +89,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
             // 设置其他claims验证 这里我们只用 IssuerClaimVerifier 也可以参考该类使用自定义的
             converter.setJwtClaimsSetVerifier(new IssuerClaimVerifier(new URL("http://cn.com.kcgroup")));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return converter;

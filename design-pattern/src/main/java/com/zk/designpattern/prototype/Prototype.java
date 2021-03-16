@@ -21,7 +21,7 @@ public class Prototype {
             System.out.println(productI == productI2);
             System.out.println(productI.getT() == productI2.getT());
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }
@@ -66,16 +66,16 @@ class ProductI implements Cloneable, Serializable {
         try (ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream)) {
             oos.writeObject(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         try (ObjectInputStream ois = new ObjectInputStream(byteArrayInputStream)) {
             ProductI productI = (ProductI) ois.readObject();
             return productI;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
 

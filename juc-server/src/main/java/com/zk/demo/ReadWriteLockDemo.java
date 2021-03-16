@@ -1,5 +1,7 @@
 package com.zk.demo;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * 读写锁做缓存
  */
+@Slf4j
 class MyCache {
     private final Map<String, Object> map = new HashMap<>();
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -21,13 +24,13 @@ class MyCache {
             try {
                 TimeUnit.MILLISECONDS.sleep(300);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             map.put(key, value);
             System.out.println(Thread.currentThread().getName() + "\t 写完了" + key);
             System.out.println();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             rwLock.writeLock().unlock();
         }
@@ -42,12 +45,12 @@ class MyCache {
             try {
                 TimeUnit.MILLISECONDS.sleep(300);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             result = map.get(key);
             System.out.println(Thread.currentThread().getName() + "\t 读完了" + result);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             rwLock.readLock().unlock();
         }
@@ -55,6 +58,7 @@ class MyCache {
     }
 }
 
+@Slf4j
 public class ReadWriteLockDemo {
 
 

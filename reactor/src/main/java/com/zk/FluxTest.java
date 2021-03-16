@@ -73,7 +73,7 @@ public class FluxTest {
         try {
             Thread.currentThread().join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

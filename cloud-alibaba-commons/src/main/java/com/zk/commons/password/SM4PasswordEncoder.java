@@ -46,7 +46,7 @@ public class SM4PasswordEncoder implements PasswordEncoder {
                     ||*/ Objects.equals(encode(Sm2Utils.decrypt(rawPassword.toString())), encodedPassword)/*sm2解密再sm4加密之后和密码对比*/
                     || Objects.equals(Sm2Utils.decrypt(rawPassword.toString()), encodedPassword);/*sm2解密之后同密码对比，用于oauth2的password模式的basic认证*/
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             log.error("密码对比错误");
             return false;
         }

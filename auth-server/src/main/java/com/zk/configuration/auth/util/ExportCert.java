@@ -1,6 +1,7 @@
 package com.zk.configuration.auth.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Base64Utils;
 
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ import java.security.cert.Certificate;
  * //        keytool -genkeypair -alias mytest -keyalg RSA  -keypass mypass -keystore mytest.jks -storepass mypass
  * 本类用于通过jks文件获取公钥私钥及验证公钥私钥可用性
  */
+@Slf4j
 public class ExportCert {
 
     //导出证书 base64格式
@@ -38,7 +40,7 @@ public class ExportCert {
                 return new KeyPair(publicKey, (PrivateKey) key);
             }
         } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }

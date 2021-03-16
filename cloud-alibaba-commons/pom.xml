@@ -19,7 +19,6 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <!--
-            保留一个
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
@@ -162,17 +161,11 @@
             <artifactId>fastjson</artifactId>
         </dependency>
 
-        <!--国密依赖-->
+        <!-- 使用hutool的smutil bcprov-jdk15to18的版本请前往Maven中央库搜索，查找对应JDK的最新版本。 -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>1.45</version>
-        </dependency>
-        <!-- todo 使用hutool的smutil -->
-        <dependency>
-            <groupId>com.sgitg</groupId>
-            <artifactId>sgcc-sm</artifactId>
-            <version>1.0.0</version>
+            <artifactId>bcprov-jdk15to18</artifactId>
+            <version>1.66</version>
         </dependency>
 
         <!-- swagger-ui -->

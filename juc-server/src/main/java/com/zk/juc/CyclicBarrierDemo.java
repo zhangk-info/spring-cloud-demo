@@ -27,7 +27,7 @@ public class CyclicBarrierDemo {
 //                    cyclicBarrier.await();
 //                } catch (InterruptedException | BrokenBarrierException e) {
 //                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
+//                    log.error(e.getMessage(), e);
 //                }
 //
 //            }, String.valueOf(i)).start();

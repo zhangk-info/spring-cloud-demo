@@ -1,5 +1,6 @@
 package com.zk.configuration.redis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @ConditionalOnBean(RedisTemplate.class)
+@Slf4j
 public class RedisService {
 
 	@Autowired(required = false)
@@ -48,7 +50,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -73,7 +75,7 @@ public class RedisService {
 		try {
 			return redisTemplate.hasKey(key);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -118,7 +120,7 @@ public class RedisService {
 			redisTemplate.opsForValue().set(key, value);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -140,7 +142,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -208,7 +210,7 @@ public class RedisService {
 			redisTemplate.opsForHash().putAll(key, map);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -229,7 +231,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -247,7 +249,7 @@ public class RedisService {
 			redisTemplate.opsForHash().put(key, item, value);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -269,7 +271,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -331,7 +333,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForSet().members(key);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -347,7 +349,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForSet().isMember(key, value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -363,7 +365,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForSet().add(key, values);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -384,7 +386,7 @@ public class RedisService {
 			}
 			return count;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -399,7 +401,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForSet().size(key);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -416,7 +418,7 @@ public class RedisService {
 			Long count = redisTemplate.opsForSet().remove(key, values);
 			return count;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -434,7 +436,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForList().range(key, start, end);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -449,7 +451,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForList().size(key);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -465,7 +467,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForList().index(key, index);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -482,7 +484,7 @@ public class RedisService {
 			redisTemplate.opsForList().rightPush(key, value);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -503,7 +505,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -520,7 +522,7 @@ public class RedisService {
 			redisTemplate.opsForList().rightPushAll(key, value);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -541,7 +543,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -559,7 +561,7 @@ public class RedisService {
 			redisTemplate.opsForList().set(key, index, value);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -577,7 +579,7 @@ public class RedisService {
 		try {
 			return redisTemplate.opsForValue().getBit(key, offset);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -597,7 +599,7 @@ public class RedisService {
 				}
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -618,7 +620,7 @@ public class RedisService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -654,7 +656,7 @@ public class RedisService {
 				}
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -672,7 +674,7 @@ public class RedisService {
 			Long remove = redisTemplate.opsForList().remove(key, count, value);
 			return remove;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return 0;
 		}
 	}

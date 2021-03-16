@@ -1,6 +1,7 @@
 package com.zk.demo.thread;
 
 import com.zk.demo.source.Cake;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 例子：
@@ -19,6 +20,7 @@ import com.zk.demo.source.Cake;
  *
  *
  */
+@Slf4j
 public class ThreadWaitNotifyDemo {
 
     public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class ThreadWaitNotifyDemo {
                 try {
                     cake.increment();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }, "生产者A").start();
@@ -39,7 +41,7 @@ public class ThreadWaitNotifyDemo {
                 try {
                     cake.decrement();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }, "消费者A").start();
@@ -49,7 +51,7 @@ public class ThreadWaitNotifyDemo {
                 try {
                     cake.increment();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }, "生产者B").start();
@@ -59,7 +61,7 @@ public class ThreadWaitNotifyDemo {
                 try {
                     cake.decrement();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }, "消费者B").start();
