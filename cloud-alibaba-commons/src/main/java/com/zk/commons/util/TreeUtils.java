@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <b>TODO(这里用一句话描述这个类的作用)</b><br/>
+ * <b>继承BaseTree的class可以通过pid将一个List转换成Tree<br/>
  * <br><b>class:</b> TreeUtils
  * <br><b>date:</b> 2017年11月28日 下午7:56:41
  *
  * @since 1.0
  */
 public class TreeUtils {
+
     /**
      * 转换成List形式树结构 (如果是缓存的list，请务必深度copy一个)
      *
@@ -26,16 +27,6 @@ public class TreeUtils {
     public static <S, T extends BaseTree> List<T> toTreeNodeList(List<S> source, Class<T> bean) {
 
         final Map<Long, T> nodes = new HashMap<>();
-
-//         ConvertUtils.register(new Converter() {
-//        
-//         @Override
-//         public <T> T convert(Class<T> arg0, Object arg1) {
-//         // TODO Auto-generated method stub
-//         return null;
-//         }
-//         }, java.util.Date.class);
-
 
         // 深度copy一个，防止源list内部结构改变
         List<T> list = BeanConvertUtils.convert(source, bean);// Collections3.copyTo(source, bean);
@@ -57,7 +48,6 @@ public class TreeUtils {
             final T parent = nodes.get(node.getPid());
             if (parent == null) {
                 ((ArrayList<T>) root.getChildren()).add(node);
-                continue;
                 // throw new RuntimeException("子节点有父级id，却没有找到此父级的对象");
             } else {
                 // 添加子节点
@@ -78,7 +68,6 @@ public class TreeUtils {
 
     // 递归找level
     private static <T extends BaseTree> int resolveLevel(final T node, final Map<Long, T> nodes) {
-        // System.out.println(node.getIntValue("level"));
         int level = 1;
         if (node != null) {
             level = node.getLevel();

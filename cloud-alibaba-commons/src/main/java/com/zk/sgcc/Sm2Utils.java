@@ -9,8 +9,9 @@ import cn.hutool.crypto.asymmetric.SM2;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.util.encoders.Hex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.KeyPair;
 import java.security.PublicKey;
@@ -68,10 +69,11 @@ public class Sm2Utils {
         }
     }
 
-    @Test
+
     /**
      * 测试 这里包含生成一个新的public_key 和 private_key
      */
+    @Test
     public void test() {
         System.out.println("==========SM2 加解密测试 开始==========");
         String text = "我是一段测试aaaa";
@@ -81,7 +83,9 @@ public class Sm2Utils {
         byte[] publicKey = pair.getPublic().getEncoded();
 
         //公钥前面的02或者03表示是压缩公钥,04表示未压缩公钥,04的时候,可以去掉前面的04
-        String pubKey = Hex.toHexString(BCUtil.encodeECPublicKey(pair.getPublic()));
+//        String pubKey = Hex.toHexString(BCUtil.encodeECPublicKey(pair.getPublic()));
+        // 前端可能需要的是没压缩的公钥
+        String pubKey = Hex.toHexString(((BCECPublicKey) pair.getPublic()).getQ().getEncoded(false));
         String priKey = Hex.toHexString(BCUtil.encodeECPrivateKey(pair.getPrivate()));
 
         System.out.println("公钥：" + pubKey);
