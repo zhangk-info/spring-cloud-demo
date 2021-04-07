@@ -1,4 +1,5 @@
 ## spring-cloud-demo 
+```consistency  availability  partition tolerance```
 
 
 #### 本demo使用spring-cloud + spring-cloud-alibaba搭建 三个测试服务数据表来自seata.io的示例
