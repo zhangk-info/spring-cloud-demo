@@ -26,7 +26,6 @@ public class CyclicBarrierDemo {
 //                    System.out.println(Thread.currentThread().getName() + "\t 星龙珠被收集 ");
 //                    cyclicBarrier.await();
 //                } catch (InterruptedException | BrokenBarrierException e) {
-//                    // TODO Auto-generated catch block
 //                    log.error(e.getMessage(), e);
 //                }
 //

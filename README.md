@@ -1,5 +1,7 @@
 ## spring-cloud-demo 
 ```consistency  availability  partition tolerance```
+```互联网三高：高性能，高扩展，高可用```
+高性能：吞吐+响应
 
 
 #### 本demo使用spring-cloud + spring-cloud-alibaba搭建 三个测试服务数据表来自seata.io的示例
@@ -36,3 +38,5 @@ http://sa-plus.dev33.cn/
 #### sa-plus 微服务版
 https://gitee.com/sz6/sp-cloud
 
+#### 源代码检测
+* SonarQube

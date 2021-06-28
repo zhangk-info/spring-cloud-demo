@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.locks.StampedLock;
 
 /**
- * <p>TODO(这里用一句话描述这个类的作用)<p/>
  * <br><b>class:</b> AbsCache
  * <br><b>date:</b> 2017/12/3
  *

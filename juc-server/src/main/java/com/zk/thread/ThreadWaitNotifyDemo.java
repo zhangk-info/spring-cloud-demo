@@ -1,6 +1,6 @@
-package com.zk.demo.thread;
+package com.zk.thread;
 
-import com.zk.demo.source.Cake;
+import com.zk.thread.source.Cake;
 import lombok.extern.slf4j.Slf4j;
 
 /**

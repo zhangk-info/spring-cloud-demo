@@ -1,16 +1,20 @@
-package com.zk.demo;
+package com.zk.thread;
 
+import com.zk.thread.pool.SimpleRunnable;
+import com.zk.thread.pool.SimpleThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
 
 @Slf4j
 public class ThreadPoolDemo {
+
     public static void main(String[] args) {
 
         ExecutorService threadPool = Executors.newFixedThreadPool(5); // 一个银行网点，5个受理业务的窗口
 //		ExecutorService threadPool = Executors.newSingleThreadExecutor(); // 一个银行网点，1个受理业务的窗口
 //		ExecutorService threadPool = Executors.newCachedThreadPool(); // 一个银行网点，可扩展受理业务的窗口
+
 //		以上3个会导致OOM所以都不能使用，来自阿里巴巴Java开发手册
 //		说明：Executors 返回的线程池对象的弊端如下：
 //		1）FixedThreadPool 和 SingleThreadPool:
@@ -26,43 +30,38 @@ public class ThreadPoolDemo {
         // 5 BlockingQueue<Runnable> 任务队列，等待中的任务（提交了尚未执行的）
         // 6 ThreadFactory 线程工厂 //重写线程工厂 目的是调优的时候需要使用线程名字
         // 7 RejectedExecutionHandler 拒绝策略
-        int corePoolSize = 2;
-        int maximumPoolSize = Runtime.getRuntime().availableProcessors() + 1;//7
-        int queueSize = Runtime.getRuntime().availableProcessors() + 1 - 2;
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 10L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(queueSize), Executors.defaultThreadFactory(), new ThreadPoolExecutor.DiscardPolicy());
 
-        //13个顾客请求
+        int corePoolSize = Runtime.getRuntime().availableProcessors() + 1;//7
+        int maximumPoolSize = corePoolSize; // 线上设置核心线程数和最大线程数一致；
+        int queueSize = Runtime.getRuntime().availableProcessors() + 1 - 2;
+        // 阿里巴巴Java开发手册规定线程工程必须自定义 工厂生产的线程必须使用有意义的线程名字
+        ThreadFactory threadFactory = new SimpleThreadFactory();
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, 10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>(queueSize), threadFactory /*Executors.defaultThreadFactory()*/, new ThreadPoolExecutor.DiscardPolicy());
+
         try {
-            // 最大 7+5 12个线程提交 默认AbortPolicy超过拒绝并报错
+            // 默认AbortPolicy超过拒绝并报错
             //new ThreadPoolExecutor.AbortPolicy() 超过(maximumPoolSize + queueSize)放弃调用，报错
             //new ThreadPoolExecutor.CallerRunsPolicy() 超过(maximumPoolSize + queueSize)返回给主线程调用，谁调我我退谁
             //new ThreadPoolExecutor.DiscardOldestPolicy() 超过(maximumPoolSize + queueSize)放弃队列中等待最久的任务，加入当前到队列
             //new ThreadPoolExecutor.DiscardPolicy() 超过(maximumPoolSize + queueSize)放弃调用，也不报错
-            for (int i = 1; i <= 30; i++) {
+            for (int i = 1; i <= 100; i++) {
 
-                // 如果总线程数 - 执行中的线程数 >= 队列大小 即 队列满了！ 就 等会儿再插
-
-
-                Long waitCount = threadPoolExecutor.getTaskCount() - threadPoolExecutor.getCompletedTaskCount() - threadPoolExecutor.getActiveCount();
-                System.out.println(waitCount + "=" + threadPoolExecutor.getTaskCount() + "-" + threadPoolExecutor.getCompletedTaskCount() + "-" + threadPoolExecutor.getActiveCount());
+                // 如果 总任务数量-已完成任务数量-执行中的线程数 >= 队列大小 即 队列满了！ 就 等会儿再加
+                long waitCount = threadPoolExecutor.getTaskCount() - threadPoolExecutor.getCompletedTaskCount() - threadPoolExecutor.getActiveCount();
+                log.debug("队列等待数量=总任务数量-已完成任务数量-执行中的线程数：" + waitCount + "=" + threadPoolExecutor.getTaskCount() + "-" + threadPoolExecutor.getCompletedTaskCount() + "-" + threadPoolExecutor.getActiveCount());
                 while (waitCount >= queueSize) {
-                    System.out.println("wait -- " + i);
+                    log.debug("队列等待数量超过，开始等待 wait -- 当前队列等待数量：" + waitCount + " & 当前加入第" + i + "个任务");
                     // 等0.5秒重新获取队列等待数量
                     TimeUnit.MILLISECONDS.sleep(500L);
                     waitCount = threadPoolExecutor.getTaskCount() - threadPoolExecutor.getCompletedTaskCount() - threadPoolExecutor.getActiveCount();
                 }
 
-                int finalI = i;
-                threadPoolExecutor.execute(() -> {
-                    System.out.println(Thread.currentThread().getName() + "\t 办理业务" + finalI);
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(2000L);
-                    } catch (InterruptedException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                    System.out.println(Thread.currentThread().getName() + "\t 办理业务成功" + finalI);
-                });
+                // 自定义Runnable进行任务办理
+                Runnable runnable = new SimpleRunnable(i);
+
+                // 核心方法，加入任务
+                threadPoolExecutor.execute(runnable);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

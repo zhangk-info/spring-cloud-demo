@@ -1,6 +1,6 @@
-package com.zk.demo.thread;
+package com.zk.thread;
 
-import com.zk.demo.source.Ticket;
+import com.zk.thread.source.Ticket;
 
 /**
  * 例子：
