@@ -40,3 +40,7 @@ https://gitee.com/sz6/sp-cloud
 
 #### 源代码检测
 * SonarQube
+
+##### 备忘
+* idea push github错误: OpenSSL SSL_read: SSL_ERROR_SYSCALL, errno 10054
+git config --global --unset http.proxy
