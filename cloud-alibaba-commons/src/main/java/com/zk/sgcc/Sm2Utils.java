@@ -36,12 +36,39 @@ public class Sm2Utils {
      * @return
      * @throws Exception
      */
-    public static String decrypt(String str) throws Exception {
-        ECPrivateKeyParameters privateKeyParams = BCUtil.toSm2Params(PRIVATE_KEY);
+    public static String decrypt(String str, String privateKeyStr) throws Exception {
+        ECPrivateKeyParameters privateKeyParams = BCUtil.toSm2Params(privateKeyStr);
         SM2 sm2 = new SM2(privateKeyParams, null);
         SM2Engine.Mode mode = SM2Engine.Mode.C1C3C2;
         sm2.setMode(mode);
         return sm2.decryptStr(str, KeyType.PrivateKey);
+    }
+
+    /**
+     * 解密
+     *
+     * @param str
+     * @return
+     * @throws Exception
+     */
+    public static String decrypt(String str) throws Exception {
+        return decrypt(str, PRIVATE_KEY);
+    }
+
+    /**
+     * 加密
+     *
+     * @param str
+     * @return
+     * @throws Exception
+     */
+    public static String encrypt(String str, String publicKeyStr) throws Exception {
+        //提取公钥点
+        PublicKey publicKey = BCUtil.decodeECPoint(publicKeyStr, "sm2p256v1");
+        SM2 sm2 = new SM2(null, publicKey);
+        SM2Engine.Mode mode = SM2Engine.Mode.C1C3C2;
+        sm2.setMode(mode);
+        return sm2.encryptHex(str, KeyType.PublicKey);
     }
 
     /**
@@ -52,12 +79,7 @@ public class Sm2Utils {
      * @throws Exception
      */
     public static String encrypt(String str) throws Exception {
-        //提取公钥点
-        PublicKey publicKey = BCUtil.decodeECPoint(PUBLIC_KEY, "sm2p256v1");
-        SM2 sm2 = new SM2(null, publicKey);
-        SM2Engine.Mode mode = SM2Engine.Mode.C1C3C2;
-        sm2.setMode(mode);
-        return sm2.encryptHex(str, KeyType.PublicKey);
+        return encrypt(str, PUBLIC_KEY);
     }
 
     public static void main(String[] args) {
