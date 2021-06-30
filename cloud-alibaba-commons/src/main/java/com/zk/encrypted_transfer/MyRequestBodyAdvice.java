@@ -1,7 +1,7 @@
 package com.zk.encrypted_transfer;
 
-import cn.com.kgroup.infrastructure.framework.core.exception.ServiceException;
-import cn.com.kgroup.infrastructure.framework.crypto.util.SM2Util;
+import com.zk.commons.exception.ServiceException;
+import com.zk.sgcc.Sm2Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Conditional;
@@ -99,7 +99,7 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
                 String deCodeStr = "";
                 //  解密
                 try {
-                    deCodeStr = deCodeStr = SM2Util.decrypt(enCodeStr, privateKeyA);
+                    deCodeStr = deCodeStr = Sm2Utils.decrypt(enCodeStr, privateKeyA);
                 } catch (Exception e) {
                     throw new ServiceException("解密失败");
                 }

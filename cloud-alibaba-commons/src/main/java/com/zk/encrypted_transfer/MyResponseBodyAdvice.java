@@ -1,8 +1,8 @@
 package com.zk.encrypted_transfer;
 
-import cn.com.kgroup.infrastructure.framework.crypto.util.SM2Util;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zk.commons.exception.ServiceException;
+import com.zk.sgcc.Sm2Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.MethodParameter;
@@ -93,11 +93,12 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice {
         try {
             out = objectMapper.writeValueAsString(body);
             // 加密
-            out = SM2Util.encrypt(out, publicKeyB);
+            out = Sm2Utils.encrypt(out, publicKeyB);
             // 返回给前端的密文去掉04
             out = out.substring(2, out.length());
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
+            throw new ServiceException("加密失败");
         }
         return out;
     }
