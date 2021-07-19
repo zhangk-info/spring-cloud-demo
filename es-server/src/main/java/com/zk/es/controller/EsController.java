@@ -68,7 +68,7 @@ public class EsController {
     }
 
     /**
-     * 通过@query的方式查询
+     * 通过QueryBuilder的方式查询
      * @param dataId
      * @param category
      * @return

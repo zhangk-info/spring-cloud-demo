@@ -1,4 +1,4 @@
-## ES中的倒排序索引
+ ## ES中的倒排序索引
 ```
 将结果（term）作为索引key，结果对应的id数组作为索引value
 如 ： 年龄 
@@ -7,13 +7,13 @@
 12 [11,13,15]
 11 [2,7,8,9,10]
 13 [12]
-10,8,12,11,13就是一个个term
-每个term对应的docids的数据就是 posting list
+年龄10,8,12,11,13就是一个个term
+每个term对应的docIds的数据就是 posting list
 对结果集进行排序[8,10,11,12,13] 就形成了 term dictionary
 term dictionary太大 不能全部放入内存中 于是对term dictionay建立索引 就形成了 term index
 
 位图 : 什么是bitset|bitmap
-1. 我们的docid必须是一个数字
+1. 我们的docId必须是一个数字
 2. term的个数要足够的少
 3. 此时我们可以用一个bit来标记某个term中存储的posting list
 例子：
@@ -169,7 +169,8 @@ term认为my friends是一个词，只能精确匹配出title字段内容包含"
                         } 
                     }
                 }
-            ]
+            ],
+            "minimum_should_match": 1   // 至少满足should中的一个条件
         }
     }
 }

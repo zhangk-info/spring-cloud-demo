@@ -15,10 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -106,8 +108,8 @@ public class DocumentsServiceImpl implements IDocumentsService {
 //        return documents.get();
         SearchHits<Documents> searchHits = elasticsearchOperations.search(searchQuery, Documents.class);
 //        List<SearchHit<Documents>> hits = searchHits.getSearchHits(); // 内围的 hits 数组
-        List<Documents> list = searchHits.stream().map(t -> t.getContent()).collect(Collectors.toList());
-        if (list != null) {
+        List<Documents> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(list)) {
             return list.get(0);
         }
         return null;

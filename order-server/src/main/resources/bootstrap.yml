@@ -75,10 +75,10 @@ spring:
           group: testA
       bindings: # 服务的整合处理
         channelA: # 这个名字是一个通道的名称 output的send 和 input的receive都是用这个通道
-          destination: testExchange # 表示要使用的Exchange名称定义
+          destination: testExchange # 表示要使用的Exchange名称定义 绑定交换机的名称
           content-type: application/json # 设置消息类型，本次为json，文本则设置“text/plain”
           binder: testChannel  # 设置要绑定的消息服务的具体设置
-          group: testA
+          group: testA # 消息分组，指定分组，用于解决随机组的时候消息被多个不同的Receiver重复处理
   #这里也必须配置 否则有一个健康检查会使用localhost:5672导致报错
   rabbitmq:
     addresses: amqp://139.155.72.177:5672
