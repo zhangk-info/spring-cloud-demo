@@ -38,7 +38,7 @@ import java.util.List;
  *     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
  *         Environment environment = context.getEnvironment();
  *         String property = environment.getProperty("sm2.enable");
- *         if (StringUtils.isNotEmpty(property) && property.equals("true")){
+ *         if (StringsUtils.isNotEmpty(property) && property.equals("true")){
  *             return true;
  *         }
  *

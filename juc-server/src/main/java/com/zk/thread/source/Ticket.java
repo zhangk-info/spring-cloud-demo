@@ -1,6 +1,7 @@
 package com.zk.thread.source;
 
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -29,6 +30,19 @@ public class Ticket {
 			lock.unlock();
 		}
 
+
+//		String lockKey = "";
+//		RLock lock = redissonClient.getLock(lockKey);
+//		lock.lock(3, TimeUnit.SECONDS);
+//		try {
+//
+//		} finally {
+//		    if (lock.isLocked()) { // 是否还是锁定状态
+//		        if (lock.isHeldByCurrentThread()) { // 是当前执行线程的锁
+//		            lock.unlock(); // 释放锁
+//		        }
+//		    }
+//		}
 
 	}
 

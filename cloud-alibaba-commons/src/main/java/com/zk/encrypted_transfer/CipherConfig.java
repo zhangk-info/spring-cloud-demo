@@ -13,7 +13,7 @@ import java.util.List;
  * 请求交互密文传输配置类
  */
 @Configuration
-@ConditionalOnExpression(value = "${sm2.enable}")
+@ConditionalOnExpression(value = "${sm2.enable:false}")
 public class CipherConfig {
 
     @Value("${sm2.private-key-a}")

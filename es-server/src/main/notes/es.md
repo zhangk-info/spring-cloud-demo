@@ -58,7 +58,7 @@ createIndex 是否创建索引，默认:true
 这个主键对应的ElasticsearchCase#setMappings()方法
 ```
 type 字段类型 默认根据java类型推断,可选类型：Text,Integer,Long,Date,Float,Double,Boolean,Object,Auto,Nested,Ip,Attachment,Keyword,新的数据类型请参考官网
-index 应该是建索引
+index 默认tru,非查询索引字段可以指定为false
 format 数据格式，可以理解为一个正则拦截可存储的数据格式
 pattern 使用场景：format = DateFormat.custom, pattern = "uuuu-MM-dd HH:mm:ss:SSS"
     uuuu是重点！ ： https://www.elastic.co/guide/en/elasticsearch/reference/current/migrate-to-java-time.html#java-time-migration-incompatible-date-formats
@@ -79,6 +79,9 @@ fielddata  默认为false，当对文本字段进行排序，聚合操作时会�
 来源：简书
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ```
+
+### @TypeAlias
+可以隐藏类名称，设置生成的index
 
 
 ## ES 中的查询
