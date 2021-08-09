@@ -81,7 +81,7 @@ fielddata  默认为false，当对文本字段进行排序，聚合操作时会�
 ```
 
 ### @TypeAlias
-可以隐藏类名称，设置生成的index
+可以隐藏类名称，设置生成的index，对应_source里面的_class属性
 
 
 ## ES 中的查询

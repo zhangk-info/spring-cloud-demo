@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @author
  * @since 2020-09-08
  */
+//@Repository //这里可以不用有这个 @EnableElasticsearchRepositories会自动扫到这个Repository
 public interface DocumentsRepository extends ElasticsearchRepository<Documents, String> {
 
     // 支持自定义方法

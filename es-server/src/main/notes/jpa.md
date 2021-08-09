@@ -23,6 +23,54 @@
 2. @Query nativeQuery = true 不能使用 使用nativeQuery=true的查询返回对象进行转换时会有一个columnName=null的null指针异常
 ```
 
+### 子查询
+
+```
+
+public static Specification<OneModel> getBySpecs(){
+
+    return (root, criteriaQuery, criteriaBuilder) -> {
+    
+        // 存放多个条件
+        List<Predicate> predicateList = new ArrayList<>();// 存放多个条件
+           
+        // 子查询
+        Subquery<MoreModel> subQuery = query.subquery(MoreModel.class);
+        Root<MoreModel> subRoot = subQuery.from(MoreModel.class);
+        // 子查询条件
+        List<Predicate> subPredicateList = new ArrayList<>();// 存放多个条件
+        subPredicateList.add(cb.equal(subRoot.get("userId"), userId));
+        // 子查询设置查询字段和查询提交
+        subQuery.select(subRoot.get("oneId")).where(subPredicateList.toArray(new Predicate[subPredicateList.size()]));
+        // 主表和子查询的关联 root.id in {subQuery}
+        predicateList.add(cb.in(root.get("id")).value(subQuery));
+        
+            // 效果等于 
+            select 
+                * 
+            from 
+                oneModel one 
+            where 
+                one.id in (
+                    select oneId from moreModel more 
+                        where more.userId = ?
+                )
+           
+        // 排序条件
+        List<Order> orderList = new ArrayList<>();
+        //按“创建时间”进行降序排列
+        orderList.add(criteriaBuilder.desc(root.get("createDateTime").as(LocalDateTime.class)));
+        
+        // 构建返回的封装对象
+        Predicate[] predicates = new Predicate[predicateList.size()];
+        return criteriaQuery.where(predicateList.toArray(predicates)).orderBy(orderList).getRestriction();     
+    }
+
+}
+
+
+```
+
 
 ### 子查询 + max
 ```
@@ -66,10 +114,10 @@ public static Specification<OneModel> getBySpecs(){
         List<Predicate> predicateList = new ArrayList<>();// 存放多个条件
            
            
-            //左连接 当前 连接 oneModel
+            // 左连接 当前 连接 oneModel
             Join<OneModel, MoreModel> moreModelJoin = root.join("moreModels", JoinType.LEFT);
             
-            
+            // 子查询
             Subquery<MoreModel> subQuery = criteriaQuery.subquery(MoreModel.class);
             Root<MoreModel> subRoot = subQuery.from(MoreModel.class);
             subQuery.select(subRoot.get("id"));
@@ -84,9 +132,9 @@ public static Specification<OneModel> getBySpecs(){
             subQuery.where(subPredicateList.toArray(subPredicates));
             
             predicateList.add(criteriaBuilder.equal(moreModelJoin.get("id"), subQuery));
-                           
+            
            
-            //效果等于 
+            // 效果等于 
             select 
                 * 
             from 

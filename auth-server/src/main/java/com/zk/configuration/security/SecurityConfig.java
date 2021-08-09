@@ -2,9 +2,9 @@ package com.zk.configuration.security;
 
 import com.zk.commons.password.SM4PasswordEncoder;
 import com.zk.configuration.auth.token_granter.MobileAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -67,6 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new SM4PasswordEncoder();
     }
 
+    /**
+     * 跨域
+     *
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().mvcMatchers(HttpMethod.OPTIONS, "/**");
