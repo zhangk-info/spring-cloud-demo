@@ -42,19 +42,30 @@ spring:
     username: root
     password: root
 
-  data:
-    elasticsearch:
-      repositories:
-        enabled: true
-      cluster-nodes: 192.168.200.30:9300 # 集群模式下用逗号分开
-      cluster-name: elasticsearch
+# #ES使用auto-configuration的方式配置
+#  data:
+#    elasticsearch:
+#      #这是低版本客户端TransportClient的配置方式弃用 官方建议使用RestClient
+#      repositories:
+#        enabled: true
+#      cluster-nodes: 192.168.200.30:9200 # 集群模式下用逗号分开
+#      cluster-name: elasticsearch
 #      properties:
 #        xpack.security.user: elastic:123456
+#      #ReactiveElasticsearchRestClient方式
+#      client:
+#        reactive:
+#          endpoints: 192.168.0.32:9200 # 集群模式下用逗号分开
+#          username: elastic
+#          password: ****
+#          use-ssl: false
+
+# 官方建议RestClientConfig方式 spring.elasticsearch.rest ElasticsearchRestClientProperties
   elasticsearch:
     rest:
       uris: http://192.168.200.30:9200
-#      username:
-#      password:
+#      username: elastic
+#      password: ****
 
   jpa:
     show-sql: true

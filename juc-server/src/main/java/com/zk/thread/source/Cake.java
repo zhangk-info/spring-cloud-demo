@@ -21,7 +21,7 @@ public class Cake {
      * 生产
      * @throws InterruptedException
      */
-    public synchronized void increment() throws InterruptedException {
+    public void increment() throws InterruptedException {
 
         lock.lock();
         try {
@@ -80,4 +80,9 @@ public class Cake {
 //        log.error(Thread.currentThread().getName() + "\t" + number);
 //        this.notifyAll();
 //    }
+
+    public static void main(String[] args) {
+        new Thread(new Runnable() {@Override public void run() { } });
+        new Thread().run();
+    }
 }

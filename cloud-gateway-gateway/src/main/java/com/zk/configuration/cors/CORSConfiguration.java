@@ -13,8 +13,24 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * 方式2
+ *
+ * spring:
+ *   cloud:
+ *     gateway:
+ *       globalcors:
+ *         cors-configurations:
+ *           '[/**]':
+ *             allowCredentials: true
+ *             allowedOriginPatterns: "*"
+ *             allowedMethods: "*"
+ *             allowedHeaders: "*"
+ *         add-to-simple-url-handler-mapping: true
+ *
+ */
 @Configuration
-public class CorsConfiguration {
+public class CORSConfiguration {
 
     private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN,token,username,client";
     private static final String ALLOWED_METHODS = "*";
@@ -42,6 +58,7 @@ public class CorsConfiguration {
             }
             return chain.filter(ctx);
         };
+
     }
 }
 

@@ -5,12 +5,21 @@ import com.zk.thread.pool.SimpleThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class ThreadPoolDemo {
 
-    public static void main(String[] args) {
+    // 用一个原子类来判断是否所有线程都执行完成
+    public AtomicInteger runnableNum = new AtomicInteger(0);
 
+    public static void main(String[] args) {
+        ThreadPoolDemo demo = new ThreadPoolDemo();
+        demo.test();
+
+    }
+
+    public void test() {
         ExecutorService threadPool = Executors.newFixedThreadPool(5); // 一个银行网点，5个受理业务的窗口
 //		ExecutorService threadPool = Executors.newSingleThreadExecutor(); // 一个银行网点，1个受理业务的窗口
 //		ExecutorService threadPool = Executors.newCachedThreadPool(); // 一个银行网点，可扩展受理业务的窗口
@@ -21,7 +30,6 @@ public class ThreadPoolDemo {
 //		允许的请求队列长度为 Integer.MAX_VALUE，可能会堆积大量的请求，从而导致 OOM。
 //		2）CachedThreadPool 和 ScheduledThreadPool:
 //		允许的创建线程数量为 Integer.MAX_VALUE，可能会创建大量的线程，从而导致 OOM。
-
 
         // ThreadPoolExecutor的7个参数:
         // 1 corePoolSize 核心线程数
@@ -58,14 +66,26 @@ public class ThreadPoolDemo {
                 }
 
                 // 自定义Runnable进行任务办理
-                Runnable runnable = new SimpleRunnable(i);
-
+                Runnable runnable = new SimpleRunnable(i, this);
+                // 增加
+                runnableNum.incrementAndGet();
                 // 核心方法，加入任务
                 threadPoolExecutor.execute(runnable);
+
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
+            while (runnableNum.get() > 0) {
+                log.error(runnableNum.get() + "-- 遍历等待线程池处理结束  等 10秒钟 重新获取 池活线程数量");
+                try {
+                    // 等 10秒钟 重新获取 池活线程数量
+                    TimeUnit.MILLISECONDS.sleep(1000L);
+                } catch (Exception e) {
+                    log.error(e.getLocalizedMessage(), e);
+                }
+            }
+
             threadPoolExecutor.shutdown();
         }
 

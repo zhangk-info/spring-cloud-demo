@@ -15,11 +15,24 @@
     
 
 
-## java多线程实现的4中方式
-* extends Thread / new Thread
-* implements Runnable
-* implements Callable<T> 通过FutureTask包装器来创建
-* Executors工具类 线程池 TreadPoolExecutor类
+## java多线程实现的2种方式
+* extends Thread / new Thread 并重写run方法
+* implements Runnable 即 new Thread(new Runnable() {@Override public void run() { } }); 给Thread传入实现了run方法的Runnable对象target
+```
+@Override
+public void run() {
+    if (target != null) {
+        target.run();
+    }
+}
+```
+
+### 其他所有方法的底层都是通过以上两种方式生成的Thread
+* implements Callable<T> 通过FutureTask包装器来创建 FutureTask<V> implements RunnableFuture<V> extends Runnable, Future<V>
+* Executors工具类 线程池 TreadPoolExecutor类  ThreadFactory.newThread(return new Thread())
+
+#### 面试问题：如果一个Thread即实现了Runnable又重写了run方法，它会执行哪个run方法呢？
+ 结论是会执行重写的run方法的代码；因为该Thread的run方法被重写了 “ if (target != null) { target.run(); } ”将会被覆盖消失，虽然传入了target但是无法调用target.run了 
 
 #### 例子
 * SaleTicket 竞争模式
@@ -30,7 +43,7 @@
 
 ArrayList/Map/Set不安全： CopyOnWriteArrayList  ConcurrentHashMap CopyOnWriteArraySet
 线程状态：new runnable blocked waiting timed_waiting terminated 
-实现线程的4中方式：new Thread \ Runnable \ Callable(FutureTask) \ ThreadPoolExecutor.execute
+实现线程的2中方式：extends Thread并重写run方法 \ new Thread(new Runnable(public void run(){})) 传入实现了run方法的Runnable对象target
 锁：synchronized ReentrantLock ReadWriteLock
 锁通信： wait notify condition await signal 
 多线程辅助类： countDownLatch cyclicBarrier semaphore
@@ -42,7 +55,7 @@ ArrayList/Map/Set不安全： CopyOnWriteArrayList  ConcurrentHashMap CopyOnWrit
 
 ArrayList/Map/Set不安全：
 线程状态：
-实现线程的4中方式：
+实现线程的2种方式：
 锁：
 锁通信： 
 多线程辅助类：

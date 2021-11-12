@@ -1,5 +1,6 @@
 package com.zk.thread.pool;
 
+import com.zk.thread.ThreadPoolDemo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -13,15 +14,17 @@ public class SimpleRunnable implements Runnable {
     /**
      * 当前执行的任务序号
      */
-    private final Integer number;
+    private Integer number;
+    private ThreadPoolDemo threadPoolDemo;
 
     /**
      * 构造方法
      *
      * @param number 任务序号
      */
-    public SimpleRunnable(Integer number) {
+    public SimpleRunnable(Integer number, ThreadPoolDemo threadPoolDemo) {
         this.number = number;
+        this.threadPoolDemo = threadPoolDemo;
     }
 
     /**
@@ -35,5 +38,6 @@ public class SimpleRunnable implements Runnable {
             log.error(e.getMessage(), e);
         }
         log.debug("线程[" + Thread.currentThread().getName() + "]  -- 办理第" + number + "个业务成功");
+        threadPoolDemo.runnableNum.decrementAndGet();
     }
 }

@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
  * 2、编写 ES 配置，给容器中注入一个 RestHighLevelClient，用来操作 9200 端口
  * https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-getting-started-initialization.html
  * 3、参照官方API
+ *
+ * 改：使用spring-boot-starter-data-elasticsearch 9300端口
  */
 @Configuration
 public class ElasticsearchConfig {

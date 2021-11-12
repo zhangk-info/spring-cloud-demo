@@ -11,8 +11,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 
+/**
+ * https://blog.csdn.net/xht555/article/details/89484091
+ * Multiple CORS header 问题 这个问题出现是因为 网关调用的其他服务也支持了跨域然后corsFilter又add了一个
+ * The 'Access-Control-Allow-Origin' header contains multiple values '*, *', but only one is allowed.
+ * Have the server send the header with a valid value, or, if an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+ */
 @Component("corsResponseHeaderFilter")
-public class CorsResponseHeaderFilter implements GlobalFilter, Ordered {
+public class CORSResponseHeaderFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
