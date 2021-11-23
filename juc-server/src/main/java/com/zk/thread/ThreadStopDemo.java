@@ -2,11 +2,15 @@ package com.zk.thread;
 
 /**
  * 正确停止线程
- *
+ * <p>
  * 想要正确停止线程 需要请求方（接收异常）、被请求方（正确位置catch异常、正确位置判断interrupted状态）、被请求方子方法（正确抛出异常）相互配合调用
  * stop/resume/suspend等已经弃用
  * stop会强制结束线程（可能导致一个任务无法正确的结束）
  * volatile和boolean的方式无法处理长时间阻塞的情况，即无法在阻塞（sleep）时正确的抛出InterruptedException异常导致阻塞等待
+ * <p>
+ * 在不可中断阻塞时如何正确停止？ 需要在被请求方（造成不可中断阻塞的方法）使用对应的Interruptibly（可中断的）方法，如下锁阻塞时调用中断方法，需要使锁支持可中断。
+ * ReentrantLock reentrantLock = new ReentrantLock();
+ * reentrantLock.lockInterruptibly();
  */
 public class ThreadStopDemo {
 
