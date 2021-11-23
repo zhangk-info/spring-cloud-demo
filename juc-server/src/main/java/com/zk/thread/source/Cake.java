@@ -16,9 +16,20 @@ public class Cake {
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
+    public static void main(String[] args) {
+        new Thread(() -> {
+            System.out.println("实现了Runnable的run方法");
+        }) {
+            @Override
+            public void run() {
+                System.out.println("重写了Thread的run方法");
+            }
+        }.start();
+    }
 
     /**
      * 生产
+     *
      * @throws InterruptedException
      */
     public void increment() throws InterruptedException {
@@ -37,27 +48,6 @@ public class Cake {
         } finally {
             lock.unlock();
         }
-    }
-
-    /**
-     * 消费
-     * @throws InterruptedException
-     */
-    public void decrement() throws InterruptedException {
-
-        lock.lock();
-        try {
-            while (number == 0) {
-                condition.await();
-            }
-            number--;
-            log.error(Thread.currentThread().getName() + "\t" + number);
-            condition.signalAll();
-        } finally {
-            lock.unlock();
-        }
-
-
     }
 //
 //    public synchronized void increment() throws InterruptedException {
@@ -81,8 +71,25 @@ public class Cake {
 //        this.notifyAll();
 //    }
 
-    public static void main(String[] args) {
-        new Thread(new Runnable() {@Override public void run() { } });
-        new Thread().run();
+    /**
+     * 消费
+     *
+     * @throws InterruptedException
+     */
+    public void decrement() throws InterruptedException {
+
+        lock.lock();
+        try {
+            while (number == 0) {
+                condition.await();
+            }
+            number--;
+            log.error(Thread.currentThread().getName() + "\t" + number);
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
+
+
     }
 }

@@ -66,14 +66,14 @@ public class FluxTest {
             int finalI = i;
             new Thread(() -> {
                 myMessageProcessor.addMsg(finalI + "");
-            }).run();
+            }).start();
         }
 
 
         try {
             Thread.currentThread().join();
         } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
+//            log.error(e.getMessage(), e);
         }
     }
 

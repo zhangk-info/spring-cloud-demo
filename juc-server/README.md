@@ -32,6 +32,16 @@ public void run() {
 * Executors工具类 线程池 TreadPoolExecutor类  ThreadFactory.newThread(return new Thread())
 
 #### 面试问题：如果一个Thread即实现了Runnable又重写了run方法，它会执行哪个run方法呢？
+``` 
+new Thread(() -> {
+    System.out.println("实现了Runnable的run方法");
+}) {
+    @Override
+    public void run() {
+        System.out.println("重写了Thread的run方法");
+    }
+}.start();
+```
  结论是会执行重写的run方法的代码；因为该Thread的run方法被重写了 “ if (target != null) { target.run(); } ”将会被覆盖消失，虽然传入了target但是无法调用target.run了 
 
 #### 例子
