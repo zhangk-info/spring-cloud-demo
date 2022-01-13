@@ -94,7 +94,7 @@ blockIO : 阻塞io
 
 ### 其它知识
 #### redis和nginx使用epoll的区别 accept
-    1. redis是单线程，且线程中需要做很多事，所以轮询获取client连接
+        1. redis是单线程，且线程中需要做很多事，所以轮询获取client连接
     2. nginx只有client产生才需要做事，所以nginx阻塞等待client连接
 
 #### redis多线程
