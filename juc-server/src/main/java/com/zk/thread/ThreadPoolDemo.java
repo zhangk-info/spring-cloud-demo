@@ -77,9 +77,9 @@ public class ThreadPoolDemo {
             log.error(e.getMessage(), e);
         } finally {
             while (runnableNum.get() > 0) {
-                log.error(runnableNum.get() + "-- 遍历等待线程池处理结束  等 10秒钟 重新获取 池活线程数量");
+                log.error(runnableNum.get() + "-- 遍历等待线程池处理结束  等 1秒钟 重新获取 池活线程数量");
                 try {
-                    // 等 10秒钟 重新获取 池活线程数量
+                    // 等 1秒钟 重新获取 池活线程数量
                     TimeUnit.MILLISECONDS.sleep(1000L);
                 } catch (Exception e) {
                     log.error(e.getLocalizedMessage(), e);

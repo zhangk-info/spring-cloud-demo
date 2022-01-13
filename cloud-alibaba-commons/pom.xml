@@ -122,7 +122,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.3.10</version>
+            <version>5.7.19</version>
         </dependency>
         <!-- 开发过程中使用 -->
         <dependency>
