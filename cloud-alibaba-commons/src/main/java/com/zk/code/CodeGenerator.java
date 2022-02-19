@@ -123,7 +123,7 @@ public class CodeGenerator {
         if (dsc2 != null) {
             dsc = dsc2;
         } else {
-            dsc.setUrl("jdbc:mysql://139.155.72.177:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+            dsc.setUrl("jdbc:mysql://43.130.59.147:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
             // dsc.setSchemaName("public");
             dsc.setDriverName("com.mysql.cj.jdbc.Driver");
             dsc.setUsername("seata");

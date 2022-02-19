@@ -35,6 +35,14 @@ spring:
       connection-test-query: SELECT 1
       max-lifetime: 1800000
       connection-timeout: 30000
-    url: jdbc:mysql://139.155.72.177:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://43.130.59.147:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: seata
     password: seata..123
+
+  redis:
+    password: 'zhangk..123'
+    cluster:
+      nodes:
+        - 43.130.59.147:16379
+        - 43.130.59.147:16380
+        - 43.130.59.147:16381

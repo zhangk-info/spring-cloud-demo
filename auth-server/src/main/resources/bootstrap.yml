@@ -37,7 +37,7 @@ spring:
       connection-test-query: SELECT 1
       max-lifetime: 1800000
       connection-timeout: 30000
-    url: jdbc:mysql://139.155.72.177:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://43.130.59.147:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: seata
     password: seata..123
   #使用nacos作为服务注册与发现中心和配置中心
@@ -45,7 +45,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 139.155.72.177:8848
+        server-addr: 43.130.59.147:8848
         #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #服务注册到的namespace
         #group: zhangk #服务注册到的group
         username: "nacos"
@@ -53,7 +53,7 @@ spring:
         heart-beat-interval: 60 #增大心跳间隔，节省网络和cpu
         watch-delay: 60000
       config:
-        server-addr: 139.155.72.177:8848 #配置中心地址
+        server-addr: 43.130.59.147:8848 #配置中心地址
         file-extension: yml #指定yaml格式的配置
         group: zhangk #配置文件所在的group
         #namespace: c9ebf9c0-ae5b-4c46-829e-b0413d759abf #配置文件所在的namespace
@@ -63,7 +63,7 @@ spring:
 
 
   redis:
-    host: 139.155.72.177
+    host: 43.130.59.147
     port: 6379
     password:
 # 集群模式下的配置
@@ -85,7 +85,7 @@ seata:
   config:
     type: nacos
     nacos:
-      server-addr: 139.155.72.177:8848
+      server-addr: 43.130.59.147:8848
       group: "SEATA_GROUP"
       namespace:
       username: "nacos"
@@ -93,7 +93,7 @@ seata:
   registry:
     type: nacos
     nacos:
-      server-addr: 139.155.72.177:8848
+      server-addr: 43.130.59.147:8848
       group: "SEATA_GROUP"
       namespace:
       username: "nacos"
