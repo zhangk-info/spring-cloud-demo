@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * 3、参照官方API
  *
  * 改：使用spring-boot-starter-data-elasticsearch 9300端口
+ * @see ESApplication in es-server
  */
 @Configuration
 public class ElasticsearchConfig {
