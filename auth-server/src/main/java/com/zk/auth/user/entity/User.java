@@ -3,18 +3,23 @@ package com.zk.auth.user.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Data
 //这个设置为true生成的get/set方法没有get/set前缀
 @Accessors(chain = true)
 @TableName("zk_user")
 public class User {
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)// 精度丢失 方式1
+    @JsonFormat(shape = JsonFormat.Shape.STRING) // 精度丢失 方式2
     @TableId(type = IdType.ID_WORKER)
     private Long id;
 
@@ -39,4 +44,8 @@ public class User {
     private Integer userType;
 
     private Integer status;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createDateTime;
 }

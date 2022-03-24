@@ -1,6 +1,7 @@
 package com.zk.configuration.auth;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.zk.auth.captch.exception.ImageCodeException;
 import com.zk.auth.captch.services.ImageCodeStore;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**
