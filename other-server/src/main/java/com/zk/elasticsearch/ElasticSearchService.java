@@ -82,7 +82,7 @@ public class ElasticSearchService {
      * @throws IOException
      */
     public IPage<Object> searchData(Integer page, Integer pageSize, String queryStr, Long projectId) throws IOException {
-        IPage pages = new Page(page, pageSize);
+        IPage<Object> pages = new Page<Object>(page, pageSize);
         // 1、创建检索请求
         SearchRequest searchRequest = new SearchRequest();
         // 指定索引
@@ -113,7 +113,7 @@ public class ElasticSearchService {
 
 
         searchSourceBuilder.query(boolQueryBuilder);
-        searchSourceBuilder.sort("",SortOrder.ASC);
+        searchSourceBuilder.sort("", SortOrder.ASC);
 
 
         System.out.println("检索条件：" + searchSourceBuilder.toString());

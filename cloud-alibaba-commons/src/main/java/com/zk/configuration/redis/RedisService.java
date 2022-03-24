@@ -4,16 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.geo.*;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -548,8 +547,7 @@ public class RedisService {
      */
     public long setRemove(String key, Object... values) {
         try {
-            Long count = redisTemplate.opsForSet().remove(key, values);
-            return count;
+            return redisTemplate.opsForSet().remove(key, values);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 0;
@@ -582,12 +580,13 @@ public class RedisService {
      */
     public long bCount(String key) {
         try {
-            return redisTemplate.execute(new RedisCallback<Long>() {
+            Long execute = redisTemplate.execute(new RedisCallback<Long>() {
                 @Override
                 public Long doInRedis(RedisConnection redisConnection) {
                     return redisConnection.bitCount(key.getBytes());
                 }
             });
+            return Objects.isNull(execute) ? 0 : execute;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 0;
@@ -635,16 +634,17 @@ public class RedisService {
      */
     public long bOpWithAdd(String key, ArrayList<String> keys) {
         try {
-            return redisTemplate.execute(new RedisCallback<Long>() {
+            Long execute = redisTemplate.execute(new RedisCallback<Long>() {
                 @Override
                 public Long doInRedis(RedisConnection redisConnection) {
                     //参数转换
-                    byte bytes[][] = new byte[][]{};
-                    bytes = keys.stream().map(t -> t.getBytes()).collect(Collectors.toList()).toArray(new byte[0][0]);
+                    byte[][] bytes = new byte[][]{};
+                    bytes = keys.stream().map(String::getBytes).collect(Collectors.toList()).toArray(new byte[0][0]);
 
                     return redisConnection.bitOp(RedisStringCommands.BitOperation.AND, key.getBytes(), bytes);
                 }
             });
+            return Objects.isNull(execute) ? 0 : execute;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 0;
@@ -667,6 +667,60 @@ public class RedisService {
             log.error(e.getMessage(), e);
             return 0;
         }
+    }
+
+    /**
+     * 设置地图坐标点
+     *
+     * @param key    所有坐标点描述的对象的key 如：所有商户坐标
+     * @param member 某个成员的key 如：商户主键
+     * @param x      地图坐标 经度
+     * @param y      地图坐标 纬度
+     */
+    public void setGeo(String key, String member, Double x, Double y) {
+        Point point = new Point(x, y);
+        redisTemplate.opsForGeo().add(key, point, member);
+    }
+
+    /**
+     * 设置地图坐标点
+     *
+     * @param key    所有坐标点描述的对象的key 如：所有商户坐标
+     * @param member 某个成员的key 如：商户主键
+     * @param x      地图坐标 经度
+     * @param y      地图坐标 纬度
+     */
+    public void delGeo(String key, String member, Double x, Double y) {
+        Point point = new Point(x, y);
+        redisTemplate.opsForGeo().remove(key, member);
+    }
+
+    /**
+     * 获取地图坐标点
+     *
+     * @param key      所有坐标点描述的对象的key 如：所有商户坐标
+     * @param x        地图坐标 经度
+     * @param y        地图坐标 纬度
+     * @param distance 距离 单位（米）
+     * @return 距离内成员的集合
+     */
+    public List<String> geoRadius(String key, Double x, Double y, Double distance) {
+        Circle circle = new Circle(new Point(x, y),
+                new Distance(distance, Metrics.MILES));
+        // 增加参数 返回距离，增加asc排序
+        RedisGeoCommands.GeoRadiusCommandArgs geoRadiusCommandArgs = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
+                .includeDistance()
+                .sortAscending();
+        GeoResults geoResults = redisTemplate.opsForGeo().radius(key, circle);
+        List<GeoResult> contentList = geoResults.getContent();
+        List<String> memberList = new ArrayList<>();
+        if (contentList.size() > 0) {
+            contentList.forEach(item -> {
+                RedisGeoCommands.GeoLocation content = (RedisGeoCommands.GeoLocation) item.getContent();
+                memberList.add((String) content.getName());
+            });
+        }
+        return memberList;
     }
 
 }
