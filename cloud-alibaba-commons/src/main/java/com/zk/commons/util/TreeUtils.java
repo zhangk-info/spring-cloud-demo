@@ -1,6 +1,8 @@
 package com.zk.commons.util;
 
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.zk.commons.entity.BaseTree;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class TreeUtils {
         final Map<Long, T> nodes = new HashMap<>();
 
         // 深度copy一个，防止源list内部结构改变
-        List<T> list = BeanConvertUtils.convert(source, bean);// Collections3.copyTo(source, bean);
+        List<T> list = JSONUtil.toList(JSONUtil.toJsonStr(source),bean);//BeanUtil.copyToList(source, bean);// Collections3.copyTo(source, bean);
 
         // 所有节点记录下来
         for (T node : list) {

@@ -4,7 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.geo.*;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResult;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -12,7 +17,11 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -91,6 +100,19 @@ public class RedisService {
             } else {
                 redisTemplate.delete(CollectionUtils.arrayToList(key));
             }
+        }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param pattern el表达式
+     */
+    @SuppressWarnings("unchecked")
+    public void dels(String pattern) {
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (!CollectionUtils.isEmpty(keys)) {
+            redisTemplate.delete(keys);
         }
     }
 
