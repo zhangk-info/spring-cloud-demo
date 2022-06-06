@@ -733,7 +733,7 @@ public class RedisService {
         RedisGeoCommands.GeoRadiusCommandArgs geoRadiusCommandArgs = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
                 .includeDistance()
                 .sortAscending();
-        GeoResults geoResults = redisTemplate.opsForGeo().radius(key, circle);
+        GeoResults geoResults = redisTemplate.opsForGeo().radius(key, circle, geoRadiusCommandArgs);
         List<GeoResult> contentList = geoResults.getContent();
         List<String> memberList = new ArrayList<>();
         if (contentList.size() > 0) {
