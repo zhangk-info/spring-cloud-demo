@@ -728,7 +728,7 @@ public class RedisService {
      */
     public List<String> geoRadius(String key, Double x, Double y, Double distance) {
         Circle circle = new Circle(new Point(x, y),
-                new Distance(distance, Metrics.MILES));
+                new Distance(distance, Metrics.NEUTRAL));
         // 增加参数 返回距离，增加asc排序
         RedisGeoCommands.GeoRadiusCommandArgs geoRadiusCommandArgs = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
                 .includeDistance()
