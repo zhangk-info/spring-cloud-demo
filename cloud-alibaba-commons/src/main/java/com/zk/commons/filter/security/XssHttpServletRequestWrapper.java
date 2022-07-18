@@ -1,7 +1,7 @@
 package com.zk.commons.filter.security;
 
 import io.micrometer.core.instrument.util.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 

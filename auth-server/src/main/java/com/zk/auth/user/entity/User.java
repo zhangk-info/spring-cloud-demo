@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class User {
     @JsonSerialize(using = ToStringSerializer.class)// 精度丢失 方式1
     @JsonFormat(shape = JsonFormat.Shape.STRING) // 精度丢失 方式2
-    @TableId(type = IdType.ID_WORKER)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**

@@ -7,7 +7,7 @@ import com.zk.commons.exception.ErrorCode;
 import com.zk.commons.exception.ServiceException;
 import com.zk.commons.properties.URIProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
@@ -31,6 +31,17 @@ public class CurrentUserFilter extends OncePerRequestFilter {
     @Resource
     private SignatureVerifier signerVerifier;
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
+
+    public static void renderJson(HttpServletResponse response, Object jsonObject) {
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter writer = response.getWriter();
+            writer.write(JSON.toJSONString(jsonObject));
+        } catch (IOException e) {
+            // do something
+        }
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -57,19 +68,8 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 response.setCharacterEncoding("utf-8");
                 response.getWriter().print(e.getMessage());
             }
-            
-            filterChain.doFilter(request, response);
-        }
-    }
 
-    public static void renderJson(HttpServletResponse response, Object jsonObject) {
-        try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter writer = response.getWriter();
-            writer.write(JSON.toJSONString(jsonObject));
-        } catch (IOException e) {
-            // do something
+            filterChain.doFilter(request, response);
         }
     }
 
