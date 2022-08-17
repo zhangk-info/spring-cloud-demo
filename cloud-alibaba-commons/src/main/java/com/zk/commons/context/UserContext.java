@@ -1,7 +1,8 @@
 package com.zk.commons.context;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.zk.commons.auth.SecurityUserDetails;
-import com.zk.commons.util.BeanConvertUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -63,7 +64,8 @@ public final class UserContext {
                     return (SecurityUserDetails) authentication.getPrincipal();
                 }
                 if (authentication.getPrincipal() instanceof Map) {
-                    return BeanConvertUtils.mapToObject((Map) authentication.getPrincipal(), SecurityUserDetails.class);
+                    return BeanUtil.mapToBean((Map) authentication.getPrincipal(), SecurityUserDetails.class, true, CopyOptions.create());
+//                    return BeanConvertUtils.mapToObject((Map) authentication.getPrincipal(), SecurityUserDetails.class);
                 }
             } else {
                 SecurityUserDetails openUser = new SecurityUserDetails();

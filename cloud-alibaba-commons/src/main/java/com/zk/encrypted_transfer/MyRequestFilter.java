@@ -2,7 +2,7 @@ package com.zk.encrypted_transfer;
 
 import com.zk.commons.exception.ServiceException;
 import com.zk.sgcc.Sm2Utils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.filter.OncePerRequestFilter;

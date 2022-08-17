@@ -12,18 +12,18 @@ public class CommonMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.setInsertFieldValByName("gmtCreate", new Date(),metaObject);
-        this.setInsertFieldValByName("createBy", UserContext.getId(),metaObject);
-        this.setInsertFieldValByName("createUser", getCurrentUser(),metaObject);
+        this.setFieldValByName("gmtCreate", new Date(),metaObject);
+        this.setFieldValByName("createBy", UserContext.getId(),metaObject);
+        this.setFieldValByName("createUser", getCurrentUser(),metaObject);
         //set update field
         this.updateFill(metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.setInsertFieldValByName("gmtUpdate", new Date(),metaObject);
-        this.setInsertFieldValByName("updateBy", UserContext.getId(),metaObject);
-        this.setInsertFieldValByName("updateUser", getCurrentUser(),metaObject);
+        this.setFieldValByName("gmtUpdate", new Date(),metaObject);
+        this.setFieldValByName("updateBy", UserContext.getId(),metaObject);
+        this.setFieldValByName("updateUser", getCurrentUser(),metaObject);
     }
 
     private String getCurrentUser() {

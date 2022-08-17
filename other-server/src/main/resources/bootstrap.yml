@@ -46,3 +46,28 @@ spring:
         - 43.130.59.147:16379
         - 43.130.59.147:16380
         - 43.130.59.147:16381
+
+#seata必须项
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_test_tx_group
+  service:
+    vgroupMapping:
+      my_test_tx_group: default
+  config:
+    type: nacos
+    nacos:
+      server-addr: 43.130.59.147:8848
+      group: "SEATA_GROUP"
+      namespace:
+      username: "nacos"
+      password: "zhangk..123"
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 43.130.59.147:8848
+      group: "SEATA_GROUP"
+      namespace:
+      username: "nacos"
+      password: "zhangk..123"

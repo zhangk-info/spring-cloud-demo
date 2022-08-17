@@ -1,6 +1,6 @@
 package com.zk.commons.filter.security;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;

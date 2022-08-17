@@ -4,7 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.geo.*;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResult;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -20,7 +25,7 @@ import java.util.stream.Collectors;
  * 自定义的RedisService 封装调用
  */
 @Configuration
-@ConditionalOnBean(RedisTemplate.class)
+//@ConditionalOnBean(RedisTemplate.class)
 @Slf4j
 public class RedisService {
 
@@ -89,8 +94,21 @@ public class RedisService {
             if (key.length == 1) {
                 redisTemplate.delete(key[0]);
             } else {
-                redisTemplate.delete(CollectionUtils.arrayToList(key));
+                redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
             }
+        }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param pattern el表达式
+     */
+    @SuppressWarnings("unchecked")
+    public void dels(String pattern) {
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (!CollectionUtils.isEmpty(keys)) {
+            redisTemplate.delete(keys);
         }
     }
 
@@ -706,12 +724,12 @@ public class RedisService {
      */
     public List<String> geoRadius(String key, Double x, Double y, Double distance) {
         Circle circle = new Circle(new Point(x, y),
-                new Distance(distance, Metrics.MILES));
+                new Distance(distance, Metrics.NEUTRAL));
         // 增加参数 返回距离，增加asc排序
         RedisGeoCommands.GeoRadiusCommandArgs geoRadiusCommandArgs = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
                 .includeDistance()
                 .sortAscending();
-        GeoResults geoResults = redisTemplate.opsForGeo().radius(key, circle);
+        GeoResults geoResults = redisTemplate.opsForGeo().radius(key, circle, geoRadiusCommandArgs);
         List<GeoResult> contentList = geoResults.getContent();
         List<String> memberList = new ArrayList<>();
         if (contentList.size() > 0) {

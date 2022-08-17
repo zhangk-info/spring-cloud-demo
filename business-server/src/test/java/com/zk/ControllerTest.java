@@ -2,6 +2,7 @@ package com.zk;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {BusinessApplication.class})
 @WebAppConfiguration
+@Slf4j
 public class ControllerTest {
     protected MockMvc mvc;
     @Autowired

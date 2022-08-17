@@ -4,7 +4,7 @@ import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 
