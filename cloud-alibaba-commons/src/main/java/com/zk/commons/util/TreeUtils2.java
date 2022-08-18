@@ -205,7 +205,7 @@ public class TreeUtils2 {
 
         final Map<Object, T> nodeMap = new HashMap<>(sourceList.size());
 
-        // 深度copy一个，防止源list内部结构改变,甚至内存溢出
+        // 深度copy一个，防止源list内部结构改变
         List<T> list = JSONUtil.toList(JSONUtil.toJsonStr(sourceList), bean);
 
         // 所有节点记录下来
@@ -430,9 +430,8 @@ public class TreeUtils2 {
         try {
             while (!nodeQueue.isEmpty()) {
                 T t = nodeQueue.pop();
-                // 深度copy一个，防止源list内部结构改变,甚至内存溢出
+                // 深度copy一个
                 List<T> children = JSONUtil.toList(JSONUtil.toJsonStr(t.getChildren()), bean);
-                // 把原数据的child置空，如果需要保留原数据，这里需要深度copy
                 t.setChildren(null);
                 if (!temp.containsKey(t.getId())) {
                     expandedList.add(t);
