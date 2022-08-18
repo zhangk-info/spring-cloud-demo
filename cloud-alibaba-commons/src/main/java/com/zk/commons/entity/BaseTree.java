@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class BaseTree implements Serializable {
+public class BaseTree<T> implements Serializable {
     private static final long serialVersionUID = -8509801876544848046L;
     private Long id;
     private Long pid;
     private Integer level;
     private Boolean hasChild;
-    private List<BaseTree> children;
+    private List<T> children;
 }
