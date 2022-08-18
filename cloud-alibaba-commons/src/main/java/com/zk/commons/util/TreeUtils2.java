@@ -250,6 +250,9 @@ public class TreeUtils2 {
             T t = nodeQueue.pop();
             // 设置treeId
             t.setTreeId(atomicInteger.getAndIncrement());
+            if (Objects.isNull(t.getParentIds())) {
+                t.setParentIds(t.getParentId());
+            }
             List<T> children = t.getChildren();
             if (CollectionUtil.isNotEmpty(children)) {
                 for (T child : children) {
