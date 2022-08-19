@@ -1,8 +1,7 @@
 package com.zk.commons.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.json.JSONUtil;
 import com.zk.commons.entity.TreeNode;
 import com.zk.commons.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,39 +10,42 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
 @Slf4j
 public class TreeUtils2 {
 
     /**
-     * 两层循环实现建树
+     * 设置treeId
      *
-     * @param treeNodeList    传入的树节点列表
-     * @param rootParentValue 最上层父级id的值
-     * @return
+     * @param treeNodeList
+     * @param <T>
      */
-    public <T extends TreeNode<T>> List<T> buildWithTwoLayer(List<T> treeNodeList, Object rootParentValue) {
+    private static <T extends TreeNode> void setTreeIdAndParentIds(List<T> treeNodeList, Object rootParentValue) {
         AtomicInteger atomicInteger = new AtomicInteger(1000);
-        List<T> trees = new ArrayList<>();
-        for (T treeNode : treeNodeList) {
-            if (rootParentValue.equals(treeNode.getParentId())) {
-                //设置树状结构id
-                treeNode.setTreeId(atomicInteger.getAndIncrement());
-                treeNode.setParentTreeId(atomicInteger.getAndIncrement());
-                trees.add(treeNode);
+        ArrayDeque<T> nodeQueue = new ArrayDeque<>();
+        nodeQueue.addAll(treeNodeList);
+        while (!nodeQueue.isEmpty()) {
+            T t = nodeQueue.pop();
+            if (Objects.isNull(t.getParentIds())) {
+                t.setParentIds(t.getParentId());
             }
-            for (T it : treeNodeList) {
-                if (treeNode.getId().equals(it.getParentId())) {
-                    if (treeNode.getChildren() == null) {
-                        treeNode.setChildren(new ArrayList<>());
+            // 设置treeId
+            t.setTreeId(atomicInteger.getAndIncrement());
+            List<T> children = t.getChildren();
+            if (CollectionUtil.isNotEmpty(children)) {
+                for (T child : children) {
+                    // 设置ParentTreeId
+                    child.setParentTreeId(t.getTreeId());
+                    // 如果上级不是顶层
+                    if (Objects.nonNull(t.getId())) {
+                        child.setParentIds(Objects.isNull(t.getParentIds()) ? (String) rootParentValue : t.getParentIds() + "," + t.getId());
+                    } else {
+                        child.setParentIds((String) rootParentValue);
                     }
-                    it.setTreeId(atomicInteger.getAndIncrement());
-                    //设置父级树状结构id
-                    it.setParentTreeId(treeNode.getTreeId());
-                    treeNode.addChild(it);
+                    nodeQueue.addLast(child);
                 }
             }
         }
-        return trees;
     }
 //
 //    /**
@@ -122,40 +124,6 @@ public class TreeUtils2 {
 //
 
     /**
-     * 设置treeId
-     *
-     * @param treeNodeList
-     * @param <T>
-     */
-    private static <T extends TreeNode> void setTreeIdAndParentIds(List<T> treeNodeList, Object rootParentValue) {
-        AtomicInteger atomicInteger = new AtomicInteger(1000);
-        ArrayDeque<T> nodeQueue = new ArrayDeque<>();
-        nodeQueue.addAll(treeNodeList);
-        while (!nodeQueue.isEmpty()) {
-            T t = nodeQueue.pop();
-            if (Objects.isNull(t.getParentIds())) {
-                t.setParentIds(t.getParentId());
-            }
-            // 设置treeId
-            t.setTreeId(atomicInteger.getAndIncrement());
-            List<T> children = t.getChildren();
-            if (CollectionUtil.isNotEmpty(children)) {
-                for (T child : children) {
-                    // 设置ParentTreeId
-                    child.setParentTreeId(t.getTreeId());
-                    // 如果上级不是顶层
-                    if (Objects.nonNull(t.getId())) {
-                        child.setParentIds(Objects.isNull(t.getParentIds()) ? (String) rootParentValue : t.getParentIds() + "," + t.getId());
-                    } else {
-                        child.setParentIds((String) rootParentValue);
-                    }
-                    nodeQueue.addLast(child);
-                }
-            }
-        }
-    }
-
-    /**
      * 转换成List形式树结构 (如果是缓存的list，请务必深度copy一个)
      *
      * @param source
@@ -205,8 +173,8 @@ public class TreeUtils2 {
 
         final Map<Object, T> nodeMap = new HashMap<>(sourceList.size());
 
-        // 深度copy一个，防止源list内部结构改变
-        List<T> list = JSONUtil.toList(JSONUtil.toJsonStr(sourceList), bean);
+        // 深度copy一个，防止源list内部结构改变 暂时不需要
+        List<T> list = sourceList;//JSONUtil.toList(JSONUtil.toJsonStr(sourceList), bean);
 
         // 所有节点记录下来
         for (T node : list) {
@@ -400,7 +368,6 @@ public class TreeUtils2 {
         return buildByRecursive(sourceList, null, rootParentValue);
     }
 
-
     /**
      * 展开树形成列表
      *
@@ -430,13 +397,13 @@ public class TreeUtils2 {
         try {
             while (!nodeQueue.isEmpty()) {
                 T t = nodeQueue.pop();
-                // 深度copy一个
-                List<T> children = JSONUtil.toList(JSONUtil.toJsonStr(t.getChildren()), bean);
-                t.setChildren(null);
-                if (!temp.containsKey(t.getId())) {
-                    expandedList.add(t);
+                List<T> children = t.getChildren();
+                // 深度copy一个当前node并将children置空
+                T n = (T) BeanUtil.copyProperties(t, bean, "children");
+                if (!temp.containsKey(n.getId())) {
+                    expandedList.add(n);
+                    temp.putIfAbsent(n.getId(), n.getId());
                 }
-                temp.putIfAbsent(t.getId(), t.getId());
                 if (CollectionUtil.isNotEmpty(children)) {
                     for (T child : children) {
                         // 继续往队列放数据
@@ -451,6 +418,38 @@ public class TreeUtils2 {
 
         // 完了之后清空原数组
         return expandedList;
+    }
+
+    /**
+     * 两层循环实现建树
+     *
+     * @param treeNodeList    传入的树节点列表
+     * @param rootParentValue 最上层父级id的值
+     * @return
+     */
+    public <T extends TreeNode<T>> List<T> buildWithTwoLayer(List<T> treeNodeList, Object rootParentValue) {
+        AtomicInteger atomicInteger = new AtomicInteger(1000);
+        List<T> trees = new ArrayList<>();
+        for (T treeNode : treeNodeList) {
+            if (rootParentValue.equals(treeNode.getParentId())) {
+                //设置树状结构id
+                treeNode.setTreeId(atomicInteger.getAndIncrement());
+                treeNode.setParentTreeId(atomicInteger.getAndIncrement());
+                trees.add(treeNode);
+            }
+            for (T it : treeNodeList) {
+                if (treeNode.getId().equals(it.getParentId())) {
+                    if (treeNode.getChildren() == null) {
+                        treeNode.setChildren(new ArrayList<>());
+                    }
+                    it.setTreeId(atomicInteger.getAndIncrement());
+                    //设置父级树状结构id
+                    it.setParentTreeId(treeNode.getTreeId());
+                    treeNode.addChild(it);
+                }
+            }
+        }
+        return trees;
     }
 
 }
