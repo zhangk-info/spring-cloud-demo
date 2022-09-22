@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * 用于存储各种“同步表记录”的实体类。
  * Created by zhangk on 2020/11/23.
  *
- * @author zhangk
  * @since 1.0
  */
 @Getter

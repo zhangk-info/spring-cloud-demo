@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
  * 一次清洗的记录 data oldData
  * Created by zhangk on 2020/11/23.
  *
- * @author zhangk
  * @since 1.0
  */
 @Getter

@@ -4,7 +4,7 @@ package com.zk.readbigdata;
  * “同步表记录”的服务层接口。
  * Created by zhangk on 2020/11/23.
  *
- * @author zhangk
+ * 
  * @since 1.0
  */
 public interface FileDataService {

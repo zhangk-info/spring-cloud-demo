@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * ftp文件 删除 任务
  *
- * @author zhangk
+ * 
  * @createDate 2020/11/24
  */
 @Component

@@ -22,7 +22,6 @@ import java.util.UUID;
 /**
  * 通过url取得文件返回InputStream类型数据
  *
- * @author yxl
  */
 @Slf4j
 public class MiniFileDownLoadUtils {
@@ -37,7 +36,6 @@ public class MiniFileDownLoadUtils {
      * @return
      * @throws new ServiceException("不合法的文件地址");
      * @description: 从服务器获得一个输入流(本例是指从服务器获得一个image输入流)
-     * @author: Jeff
      * @date: 2019年12月7日
      */
     public static InputStream getInputStream(String urlPath, String ossUrlPrefix) {

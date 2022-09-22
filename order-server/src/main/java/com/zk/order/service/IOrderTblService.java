@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  *  服务类
  * </p>
  *
- * @author 
+ * @author
  * @since 2020-09-08
  */
 public interface IOrderTblService extends IService<OrderTbl> {

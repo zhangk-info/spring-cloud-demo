@@ -3,7 +3,7 @@ package com.zk.elasticsearch;
 import com.zk.ControllerTest;
 import com.zk.RequestTypeEnum;
 import com.zk.UtilApplication;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.HashMap;

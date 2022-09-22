@@ -2,7 +2,6 @@ package com.zk.commons.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.json.JSONUtil;
 import com.zk.commons.entity.TreeNode;
 import com.zk.commons.exception.ServiceException;
@@ -15,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * @author lengleng、zhank
+ * 
  * @date 2017年11月9日23:34:11
  * @update 2022/08/18
  */
