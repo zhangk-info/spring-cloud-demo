@@ -6,7 +6,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.util.Assert;
 
 /**
- * 
+ * job的创建是有Quartz通过反射创建的，并未交由Spring容器创建。故原则上来说，是无法在Job实例中使用依赖注入的，解决方案如下
  */
 class AutowireCapableBeanJobFactory extends SpringBeanJobFactory {
 	private final AutowireCapableBeanFactory beanFactory;

@@ -19,9 +19,6 @@ spring:
       multipart:
         max-file-size: 100MB
         max-request-size: 300MB
-  # 定义quartz的参数
-  quartz:
-
   datasource:
     test-while-idle: true
     time-between-eviction-runs-millis: 3600000
@@ -40,13 +37,22 @@ spring:
 #    url: jdbc:mysql://43.130.59.147:31001/seata-at-test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
 #    username: seata
 #    password: seata..123
-    url: jdbc:mysql://localhost:3306/test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://43.130.59.147:3306/test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
-
+    password: zhangkun..123
   jpa:
     show-sql: true
 
+#  # 定义quartz的参数 这里的参数在使用stater之后生效，另外不建议使用jdbc存储，这些表是任务调度过程中的临时表 参考tables_mysql.sql
+#  quartz:
+#    auto-startup: true
+#    # 使用数据库作为jobStore
+#    job-store-type: jdbc
+#    # 默认情况下，配置创建的作业不会覆盖已从持久作业存储中读取的已注册作业。设置为true之后才会覆盖，否则只能删除job之后新增job sysJobService.removeJob sysJobService.addOrUpdateJob
+#    overwrite-existing-jobs: true
+#    jdbc:
+#      # 是否启动时初始化数据库，由于我们自定义了sys_job增加了invok类型和方式，所以不能覆盖
+#      initialize-schema: never
 
 # LOGGING
 logging:

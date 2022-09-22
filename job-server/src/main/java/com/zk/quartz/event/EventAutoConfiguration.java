@@ -20,12 +20,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ConditionalOnWebApplication
 public class EventAutoConfiguration {
     @Autowired
-    private TaskInvokUtil taskInvokUtil;
-    @Autowired
     private SysJobLogService sysJobLogService;
 
     @Bean
-    public SysJobListener sysJobListener() {
+    public SysJobListener sysJobListener(TaskInvokUtil taskInvokUtil) {
         return new SysJobListener(taskInvokUtil);
     }
 

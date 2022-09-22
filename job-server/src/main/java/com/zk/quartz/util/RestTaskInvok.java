@@ -6,6 +6,7 @@ import com.zk.quartz.bean.entity.SysJob;
 import com.zk.quartz.exception.TaskException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @AllArgsConstructor
 public class RestTaskInvok implements ITaskInvok {
 
+    @Autowired
     private RestTemplate restTemplate;
 
     @Override
