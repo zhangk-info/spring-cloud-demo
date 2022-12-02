@@ -16,7 +16,6 @@ import java.util.List;
 
 /**
  * Swagger2API 文档的配置
- * Created by taosq on 2019/4/26
  */
 @Configuration
 @EnableSwagger2
@@ -70,9 +69,9 @@ public class Swagger2Config {
                 .build();
     }
 
-    private List<ApiKey> securitySchemes() {
+    private List<SecurityScheme> securitySchemes() {
         //设置请求头信息
-        List<ApiKey> result = new ArrayList<>();
+        List<SecurityScheme> result = new ArrayList<>();
         ApiKey apiKey = new ApiKey("Authorization", "Authorization", "header");
         result.add(apiKey);
         return result;

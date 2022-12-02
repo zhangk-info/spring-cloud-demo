@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Swagger2API 文档的配置
- * Created by taosq on 2019/4/26
+ * 
  */
 @Configuration
 @EnableSwagger2

@@ -2,11 +2,8 @@ package com.zk.commons.util;
 
 
 /**
- * <b>驼峰转换等</b><br/>
- * <br><b>class:</b> TreeUtils
- * <br><b>date:</b> 2017年11月28日 下午7:56:41
+ * sql处理工具类
  *
- * @since 1.0
  */
 public class SqlUtils {
     private static final char UNDERLINE = '_';
