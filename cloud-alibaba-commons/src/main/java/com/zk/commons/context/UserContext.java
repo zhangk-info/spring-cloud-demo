@@ -65,7 +65,6 @@ public final class UserContext {
                 }
                 if (authentication.getPrincipal() instanceof Map) {
                     return BeanUtil.mapToBean((Map) authentication.getPrincipal(), SecurityUserDetails.class, true, CopyOptions.create());
-//                    return BeanConvertUtils.mapToObject((Map) authentication.getPrincipal(), SecurityUserDetails.class);
                 }
             } else {
                 SecurityUserDetails openUser = new SecurityUserDetails();

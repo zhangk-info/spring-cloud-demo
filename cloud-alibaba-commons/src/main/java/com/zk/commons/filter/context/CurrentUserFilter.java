@@ -8,9 +8,13 @@ import com.zk.commons.exception.ServiceException;
 import com.zk.commons.properties.URIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -59,9 +65,11 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 }
                 Jwt jwt = JwtHelper.decodeAndVerify(StringUtils.substringAfter(authToken, "Bearer ").trim(), signerVerifier);
                 CurrentUser currentUser = JSON.parseObject(jwt.getClaims(), CurrentUser.class);
-
+                // 设置CurrentUser
                 UserContext.set(currentUser);
-                log.info("current currentUser is : {}", null != currentUser ? currentUser.toString() : " null");
+                log.debug("current currentUser is : {}", null != currentUser ? currentUser.toString() : " null");
+                setAuthorizationWithAuthority(request);
+                log.debug("set authority success : {}", SecurityContextHolder.getContext().getAuthentication().getCredentials());
             } catch (Exception e) {
                 log.error("current user filter error. url is [{}]", request.getRequestURI(), e);
                 response.setStatus(401);
@@ -71,6 +79,28 @@ public class CurrentUserFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }
+    }
+
+    /**
+     * 重新设置SecurityContext的Authentication，用于重新设置roles
+     *
+     * @param request
+     */
+    private void setAuthorizationWithAuthority(HttpServletRequest request) {
+        // TODO 得到当前用户的所有权限
+        List<String> roles = new ArrayList<>();
+        roles.add("user");
+        List<SimpleGrantedAuthority> list = new ArrayList<>();
+        for (String role : roles) {
+            SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
+            list.add(grantedAuthority);
+        }
+        // 生成新的Authentication
+        PreAuthenticatedAuthenticationToken auth = new PreAuthenticatedAuthenticationToken(
+                UserContext.getUser(), null, list
+        );
+        auth.setDetails(new WebAuthenticationDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     /**
