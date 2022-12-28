@@ -75,6 +75,7 @@ public class CurrentUserFilter extends OncePerRequestFilter {
                 response.setStatus(401);
                 response.setCharacterEncoding("utf-8");
                 response.getWriter().print(e.getMessage());
+                return;
             }
 
             filterChain.doFilter(request, response);
