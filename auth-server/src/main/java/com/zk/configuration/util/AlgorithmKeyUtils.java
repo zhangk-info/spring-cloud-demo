@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.util;
+package com.zk.configuration.util;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 

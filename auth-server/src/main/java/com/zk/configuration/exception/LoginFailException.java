@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.exception;
+package com.zk.configuration.exception;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;

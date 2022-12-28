@@ -1,6 +1,6 @@
-package com.zk.configuration.auth.token_granter;
+package com.zk.configuration.token_granter;
 
-import com.zk.configuration.auth.SecurityUserDetailService;
+import com.zk.configuration.SecurityUserDetailService;
 import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

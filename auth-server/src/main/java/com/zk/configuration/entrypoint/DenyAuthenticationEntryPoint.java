@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.entrypoint;
+package com.zk.configuration.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-import com.zk.configuration.auth.util.AlgorithmKeyUtils;
+import com.zk.configuration.util.AlgorithmKeyUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

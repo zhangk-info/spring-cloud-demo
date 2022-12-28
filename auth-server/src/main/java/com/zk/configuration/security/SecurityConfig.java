@@ -1,8 +1,7 @@
 package com.zk.configuration.security;
 
 import com.zk.commons.password.SM4PasswordEncoder;
-import com.zk.configuration.auth.token_granter.MobileAuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zk.configuration.token_granter.MobileAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

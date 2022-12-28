@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.token_granter;
+package com.zk.configuration.token_granter;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,7 +1,7 @@
-package com.zk.configuration.auth;
+package com.zk.configuration;
 
-import com.zk.configuration.auth.exception.LoginWebResponseExceptionTranslator;
-import com.zk.configuration.auth.token_granter.MobileGranter;
+import com.zk.configuration.exception.LoginWebResponseExceptionTranslator;
+import com.zk.configuration.token_granter.MobileGranter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.zk.configuration.auth;
+package com.zk.configuration;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zk.auth.user.entity.User;

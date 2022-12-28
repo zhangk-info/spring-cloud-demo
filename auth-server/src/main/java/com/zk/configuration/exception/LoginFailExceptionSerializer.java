@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.exception;
+package com.zk.configuration.exception;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

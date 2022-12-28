@@ -1,4 +1,4 @@
-package com.zk.configuration.auth;
+package com.zk.configuration;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;

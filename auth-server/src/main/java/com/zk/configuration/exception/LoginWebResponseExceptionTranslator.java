@@ -1,4 +1,4 @@
-package com.zk.configuration.auth.exception;
+package com.zk.configuration.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.zk.configuration.auth;
+package com.zk.configuration;
 
 import com.zk.commons.auth.SecurityUserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
