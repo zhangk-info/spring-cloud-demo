@@ -2,34 +2,41 @@ package com.zk.sgcc;
 
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import org.springframework.util.Base64Utils;
 
-public class Sm4Utils<main> {
+/**
+ * @author zhangkun
+ */
+public class Sm4Utils {
 
-    public static final String KEY = "931531da6b124257b4bbbd0d2bf5fa74";
+    public static final String KEY = "gdMfxJAPzBItGBxo724Byg==";
 
     public static String decrypt(String str) throws Exception {
-        SymmetricCrypto sm4 = SmUtil.sm4();
+        SymmetricCrypto sm4 = SmUtil.sm4(Base64Utils.decodeFromString(KEY));
         return sm4.decryptStr(str);
     }
 
     public static String encrypt(String str) throws Exception {
-        SymmetricCrypto sm4 = SmUtil.sm4();
+        SymmetricCrypto sm4 = SmUtil.sm4(Base64Utils.decodeFromString(KEY));
         return sm4.encryptHex(str);
     }
 
-    //生成一个加密字符串
+//    //生成一个加密字符串
 //    public static void main(String[] args){
-//        System.out.println(RandomUtil.simpleUUID());
+//        byte[] key = SmUtil.sm4().getSecretKey().getEncoded();
+//        System.out.println(Base64Utils.encodeToString(key));
 //    }
 
     public static void main(String[] args) {
-        String str = "zhangk..123";
-//        String str = "zhangk";
+        String str = "123456";
         try {
-//            System.out.println(decrypt(str));
-            System.out.println(encrypt(str));
+            byte[] key = SmUtil.sm4().getSecretKey().getEncoded();
+            System.out.println(Base64Utils.encodeToString(key));
+            String encodeStr = encrypt(str);
+            System.out.println(encodeStr);
+            System.out.println(decrypt(encodeStr));
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
     }

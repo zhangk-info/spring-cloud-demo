@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
  * 自定义的RedisService 封装调用
  */
 @Configuration
-//@ConditionalOnBean(RedisTemplate.class)
 @Slf4j
 public class RedisService {
 
