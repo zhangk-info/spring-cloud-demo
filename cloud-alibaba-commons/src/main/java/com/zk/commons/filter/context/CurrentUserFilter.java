@@ -8,6 +8,8 @@ import com.zk.commons.exception.ServiceException;
 import com.zk.commons.properties.URIProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
@@ -17,6 +19,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
@@ -52,7 +55,15 @@ public class CurrentUserFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (matcher(request.getRequestURI())) {
+        // cors处理 对于OPTIONS请求直接返回成功
+        if (CorsUtils.isCorsRequest(request)) {
+            if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+                response.setStatus(HttpStatus.OK.value());
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
+        if (matcher(request.getRequestURI()) || antPathMatcher.match("/logout", request.getRequestURI())) {
             filterChain.doFilter(request, response);
         } else {
             try {
