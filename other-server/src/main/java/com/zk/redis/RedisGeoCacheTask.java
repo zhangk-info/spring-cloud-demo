@@ -113,7 +113,7 @@ public class RedisGeoCacheTask {
 //                        log.debug(" RedisGeoCacheTask 获取 第 " + page.get() + " 页数据，获取到 " + merchantListVo.size() + " 新的数据，执行完成。");
 //                        break;
 //                    }
-//
+//                    // 这里要根据记录是否会更新（删除）来判断页码是否叠加
 //                    page.getAndIncrement();
 //
 //                } else {
