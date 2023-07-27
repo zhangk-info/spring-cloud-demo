@@ -38,7 +38,7 @@ public class RedissonLock {
 
         // 方式2 尝试锁并处理InterruptedException异常
         try {
-            // 尝试加锁，最多等待5毫秒，上锁以后10秒自动解锁
+            // 尝试加锁，最多等待5秒，上锁以后10秒自动解锁
             if (lock.tryLock(5, 10, TimeUnit.SECONDS)) {
                 // 业务处理
             } else {
@@ -56,8 +56,8 @@ public class RedissonLock {
 
         // 方式3 尝试锁并向上层抛出InterruptedException异常
         try {
-            // 尝试加锁，最多等待10毫秒，上锁以后10秒自动解锁
-            if (lock.tryLock(10, 10, TimeUnit.SECONDS)) {
+            // 尝试加锁，最多等待5秒，上锁以后10秒自动解锁
+            if (lock.tryLock(5, 10, TimeUnit.SECONDS)) {
                 try {
                     // 处理
                     log.info("tryLock thread---{}, lock:{}", Thread.currentThread().getId(), lock);
