@@ -1,7 +1,10 @@
 package com.zk.configuration.jackson;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -45,11 +48,23 @@ public class ObjectMapperConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         // 下面配置解决LocalDateTime序列化的问题
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
 
         // 设置时区 保持一致 重要
         objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        // 排序key
+        objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        //忽略空bean转json错误
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        //忽略在json字符串中存在，在java类中不存在字段，防止错误。
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //序列换成json时,将所有的long变成string  因为js中得数字类型不能包含所有的java long值
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        objectMapper.registerModule(simpleModule);
 
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
         //日期序列化
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
@@ -63,63 +78,6 @@ public class ObjectMapperConfig {
         objectMapper.registerModule(javaTimeModule);
 
         return objectMapper;
-    }
-
-    /**
-     * LocalDate转换器，用于转换RequestParam和PathVariable参数
-     */
-    @Bean
-    public Converter<String, LocalDate> localDateConverter() {
-        return new Converter<String, LocalDate>() {
-            @Override
-            public LocalDate convert(String source) {
-                return LocalDate.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT));
-            }
-        };
-    }
-
-    /**
-     * LocalDateTime转换器，用于转换RequestParam和PathVariable参数
-     */
-    @Bean
-    public Converter<String, LocalDateTime> localDateTimeConverter() {
-        return new Converter<String, LocalDateTime>() {
-            @Override
-            public LocalDateTime convert(String source) {
-                return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT));
-            }
-        };
-    }
-
-    /**
-     * LocalTime转换器，用于转换RequestParam和PathVariable参数
-     */
-    @Bean
-    public Converter<String, LocalTime> localTimeConverter() {
-        return new Converter<String, LocalTime>() {
-            @Override
-            public LocalTime convert(String source) {
-                return LocalTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT));
-            }
-        };
-    }
-
-    /**
-     * Date转换器，用于转换RequestParam和PathVariable参数
-     */
-    @Bean
-    public Converter<String, Date> dateConverter() {
-        return new Converter<String, Date>() {
-            @Override
-            public Date convert(String source) {
-                SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
-                try {
-                    return format.parse(source);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
     }
 
 }
