@@ -1,5 +1,6 @@
 package com.zk.configuration.jackson;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -12,9 +13,11 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,4 +83,16 @@ public class ObjectMapperConfig {
         return objectMapper;
     }
 
+
+    /**
+     * json序列化配置
+     *
+     * @param objectMapper objectMapper
+     * @return HttpMessageConverters
+     */
+    @Bean
+    public HttpMessageConverters httpMessageConverters(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        return new HttpMessageConverters(jackson2HttpMessageConverter);
+    }
 }
