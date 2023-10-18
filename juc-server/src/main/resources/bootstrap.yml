@@ -76,23 +76,16 @@ spring:
 #seata必须项
 seata:
   enabled: true
-  application-id: ${spring.application.name}
+  data-source-proxy-mode: AT  # !!非常重要 慎重选择
   tx-service-group: my_test_tx_group
   service:
     vgroupMapping:
       my_test_tx_group: default
-  config:
-    type: nacos
-    nacos:
-      server-addr: 43.130.59.147:8848
-      group: "SEATA_GROUP"
-      namespace:
-      username: "nacos"
-      password: "zhangk..123"
   registry:
     type: nacos
     nacos:
       server-addr: 43.130.59.147:8848
+      application: ft-server-seata-tc # tc服务在nacos中的服务名称
       group: "SEATA_GROUP"
       namespace:
       username: "nacos"
